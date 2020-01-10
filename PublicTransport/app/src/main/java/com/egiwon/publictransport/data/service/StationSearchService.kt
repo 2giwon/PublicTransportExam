@@ -4,13 +4,13 @@ import com.egiwon.publictransport.BuildConfig
 import com.egiwon.publictransport.data.StationCallback
 import com.egiwon.publictransport.data.StationService
 import com.egiwon.publictransport.data.response.ServiceResult
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 class StationSearchService(
     val receiver: StationCallback
@@ -30,7 +30,7 @@ class StationSearchService(
                 )
                 .build()
         )
-        .addConverterFactory(TikXmlConverterFactory.create())
+        .addConverterFactory(SimpleXmlConverterFactory.create())
         .build()
         .create(StationService::class.java)
 
