@@ -1,26 +1,50 @@
 package com.egiwon.publictransport.data.response
 
-import com.tickaroo.tikxml.annotation.Element
-import com.tickaroo.tikxml.annotation.Path
-import com.tickaroo.tikxml.annotation.PropertyElement
-import com.tickaroo.tikxml.annotation.Xml
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
 
-@Xml
-data class ServiceResult(
+@Root(name = "ServiceResult", strict = false)
+class ServiceResult {
 
-    @Path("comMsgHeader/msgHeader/headerCd/headerMsg/itemCount/msgBody")
-    @Element
-    val itemList: List<ItemList>
-)
+    @field:Element(name = "msgHeader")
+    var msgHeader: MsgHeader? = null
 
-@Xml
-data class ItemList(
+    @field:Element(name = "msgBody")
+    var msgBody: MsgBody? = null
+}
 
-    @PropertyElement val arsId: Int = 0,
-    @PropertyElement val posX: String = "",
-    @PropertyElement val posY: String = "",
-    @PropertyElement val stId: String = "",
-    @PropertyElement val stNm: String = "",
-    @PropertyElement val tmX: String = "",
-    @PropertyElement val tmY: String = ""
+@Root(name = "msgHeader", strict = false)
+class MsgHeader {
+
+    @field:Element(name = "headerCd")
+    var headerCd: String = ""
+    @field:Element(name = "headerMsg")
+    var headerMsg: String = ""
+    @field:Element(name = "itemCount")
+    var itemCount: Int = 0
+}
+
+@Root(name = "msgBody", strict = false)
+class MsgBody {
+    @field:ElementList(inline = true, name = "itemList")
+    var itemList = mutableListOf<Item>()
+}
+
+@Root(name = "itemList", strict = false)
+data class Item(
+    @field:Element(name = "arsId")
+    var arsId: Int = 0,
+    @field:Element(name = "posX")
+    var posX: String = "",
+    @field:Element(name = "posY")
+    var posY: String = "",
+    @field:Element(name = "stId")
+    var stId: String = "",
+    @field:Element(name = "stNm")
+    var stNm: String = "",
+    @field:Element(name = "tmX")
+    var tmX: String = "",
+    @field:Element(name = "tmY")
+    var tmY: String = ""
 )
