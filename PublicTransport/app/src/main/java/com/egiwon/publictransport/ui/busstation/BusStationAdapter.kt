@@ -46,7 +46,7 @@ class BusStationAdapter(private val onClick: (String) -> Unit) :
         private fun View.bindItem(item: Item) {
             tv_station_name.text = item.stNm
             tv_station_id.text = item.stId
-            tv_station_location.text = String.format("X : ${item.posX} Y : ${item.posY}")
+            tv_station_arsId.text = item.arsId.toString()
         }
 
     }

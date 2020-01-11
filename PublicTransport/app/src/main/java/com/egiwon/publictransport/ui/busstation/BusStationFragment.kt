@@ -40,8 +40,8 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
     }
 
     override fun onSuccess(stationInfos: ServiceResult) {
-        (rv_station.adapter as? BusStationAdapter)?.setItems(stationInfos)
         hideProgressBar()
+        (rv_station.adapter as? BusStationAdapter)?.setItems(stationInfos)
     }
 
     override fun onFailure(throwable: Throwable) {
@@ -57,24 +57,22 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
     }
 
     private fun errorloadStationFail(throwable: Throwable) {
+        hideProgressBar()
         Toast.makeText(
             requireContext(),
             requireContext().getString(R.string.error_load_station)
                     + throwable.localizedMessage,
             Toast.LENGTH_SHORT
         ).show()
-
-        hideProgressBar()
     }
 
     private fun errorSearchStationEmpty() {
+        hideProgressBar()
         Toast.makeText(
             requireContext(),
             getString(R.string.error_empty_station_name),
             Toast.LENGTH_SHORT
         ).show()
-
-        hideProgressBar()
     }
 
     companion object {
