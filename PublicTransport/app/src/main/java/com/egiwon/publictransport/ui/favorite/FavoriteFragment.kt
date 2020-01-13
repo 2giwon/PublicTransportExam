@@ -18,7 +18,7 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             (adapter as? FavoriteAdapter)?.run {
-                setItems((requireActivity() as MainActivity).favouriteList.toList())
+                setItems((requireActivity() as MainActivity).favouriteSet.toList())
             }
         }
 

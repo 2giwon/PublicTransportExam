@@ -36,13 +36,9 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
 
     }
 
-    private val onClick: (Boolean, Item) -> Unit = { checked, item ->
+    private val onClick: (Item) -> Unit = { item ->
         (requireActivity() as MainActivity).run {
-            if (checked) {
-                setFavoriteSubject.onNext(item)
-            } else {
-                removeFavoriteSubject.onNext(item)
-            }
+            setFavoriteSubject.onNext(item)
         }
     }
 

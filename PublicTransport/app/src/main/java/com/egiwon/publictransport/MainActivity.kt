@@ -16,14 +16,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    val favouriteList = mutableListOf<Item>()
+    val favouriteSet = mutableSetOf<Item>()
 
     val setFavoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
-    val removeFavoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun Disposable.addDisposable() {
+    private fun Disposable.addDisposable() {
         compositeDisposable.add(this)
     }
 
@@ -43,14 +42,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setFavoriteSubject.subscribeOn(Schedulers.single())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                favouriteList.add(it)
+                favouriteSet.add(it)
             }.addDisposable()
 
-        removeFavoriteSubject.subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                favouriteList.remove(it)
-            }.addDisposable()
     }
 
     override fun onDestroy() {
