@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.StationCallback
-import com.egiwon.publictransport.data.response.ServiceResult
+import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.data.service.StationSearchService
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
@@ -39,7 +39,7 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
 
     }
 
-    override fun onSuccess(stationInfos: ServiceResult) {
+    override fun onSuccess(stationInfos: List<Item>) {
         hideProgressBar()
         (rv_station.adapter as? BusStationAdapter)?.setItems(stationInfos)
     }

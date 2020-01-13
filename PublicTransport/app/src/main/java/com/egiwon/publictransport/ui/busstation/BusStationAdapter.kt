@@ -7,13 +7,12 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.response.Item
-import com.egiwon.publictransport.data.response.ServiceResult
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
 class BusStationAdapter(private val onClick: (String) -> Unit) :
     RecyclerView.Adapter<BusStationAdapter.StationViewHolder>() {
 
-    private val stationList = mutableListOf<Item>()
+    private val stationList = ArrayList<Item>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder =
         StationViewHolder(parent = parent).apply {
@@ -28,9 +27,9 @@ class BusStationAdapter(private val onClick: (String) -> Unit) :
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) =
         holder.bind(stationList[position])
 
-    fun setItems(resultItem: ServiceResult) {
+    fun setItems(resultItems: List<Item>) {
         stationList.clear()
-        resultItem.msgBody?.itemList?.forEach { stationList.add(it) }
+        stationList.addAll(resultItems)
         notifyDataSetChanged()
     }
 

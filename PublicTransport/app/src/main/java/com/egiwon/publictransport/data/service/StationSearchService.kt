@@ -48,8 +48,15 @@ class StationSearchService(
                     call: Call<ServiceResult>,
                     response: Response<ServiceResult>
                 ) {
-                    response.body()?.let {
-                        receiver.onSuccess(it)
+                    response.body()?.let { serviceResult ->
+                        serviceResult.msgBody?.let { msgBody ->
+                            if (msgBody.itemList.isNullOrEmpty()) {
+                                receiver.onFailure(Throwable())
+                            } else {
+                                receiver.onSuccess(msgBody.itemList.toList())
+                            }
+
+                        }
                     }
                 }
             })
