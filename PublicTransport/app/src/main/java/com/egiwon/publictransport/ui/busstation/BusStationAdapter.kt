@@ -9,7 +9,7 @@ import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.response.Item
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
-class BusStationAdapter(private val onClick: (String) -> Unit) :
+class BusStationAdapter(private val onClick: (Boolean, Item) -> Unit) :
     RecyclerView.Adapter<BusStationAdapter.StationViewHolder>() {
 
     private val stationList = ArrayList<Item>()
@@ -17,8 +17,7 @@ class BusStationAdapter(private val onClick: (String) -> Unit) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder =
         StationViewHolder(parent = parent).apply {
             itemView.cb_favourite.setOnClickListener {
-                itemView.cb_favourite.isChecked = true
-                onClick(stationList[adapterPosition].stId)
+                onClick(itemView.cb_favourite.isChecked, stationList[adapterPosition])
             }
         }
 

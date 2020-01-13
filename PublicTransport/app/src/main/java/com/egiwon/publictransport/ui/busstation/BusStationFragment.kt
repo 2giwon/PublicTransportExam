@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.egiwon.publictransport.MainActivity
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.StationCallback
 import com.egiwon.publictransport.data.response.Item
@@ -12,10 +13,6 @@ import com.egiwon.publictransport.data.service.StationSearchService
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
 class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallback {
-
-    private val onClick: (String) -> Unit = {
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,6 +34,16 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+    }
+
+    private val onClick: (Boolean, Item) -> Unit = { checked, item ->
+        (requireActivity() as MainActivity).run {
+            if (checked) {
+                setFavoriteSubject.onNext(item)
+            } else {
+                removeFavoriteSubject.onNext(item)
+            }
+        }
     }
 
     override fun onSuccess(stationInfos: List<Item>) {
