@@ -44,6 +44,7 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
 
     override fun onSuccess(stationInfos: List<Item>) {
         hideProgressBar()
+        hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(stationInfos)
     }
 
@@ -57,6 +58,11 @@ class BusStationFragment : Fragment(R.layout.fragment_busstation), StationCallba
 
     private fun hideProgressBar() {
         progress_circular.visibility = View.GONE
+    }
+
+    private fun hideEmptyBus() {
+        iv_empty_bus.visibility = View.GONE
+        tv_empty_bus.visibility = View.GONE
     }
 
     private fun errorloadStationFail(throwable: Throwable) {
