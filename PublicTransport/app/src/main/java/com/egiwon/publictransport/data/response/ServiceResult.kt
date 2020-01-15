@@ -34,7 +34,7 @@ class MsgBody {
 @Root(name = "itemList", strict = false)
 data class Item(
     @field:Element(name = "arsId")
-    var arsId: Int = 0,
+    var arsId: String = "",
     @field:Element(name = "posX")
     var posX: String = "",
     @field:Element(name = "posY")

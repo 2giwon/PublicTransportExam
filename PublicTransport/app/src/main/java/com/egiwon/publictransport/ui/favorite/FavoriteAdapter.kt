@@ -7,6 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.ext.toStationId
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
 class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavouriteStationViewHolder>() {
@@ -38,7 +39,7 @@ class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavouriteStationVie
 
         private fun View.bindItem(item: Item) {
             tv_station_name.text = item.stNm
-            tv_station_arsId.text = item.arsId.toString()
+            tv_station_arsId.text = item.arsId.toStationId()
         }
 
     }
