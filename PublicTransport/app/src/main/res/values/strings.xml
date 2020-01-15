@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">PublicTransport</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">BusStation</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="search_station_hint">정류장을 검색해주세요</string>
+    <string name="error_load_station">불러오기 실패</string>
+    <string name="error_empty_station_name">정류장을 입력해 주세요.</string>
+    <string name="empty_bus">Empty Bus</string>
+
 </resources>
