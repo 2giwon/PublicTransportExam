@@ -1,7 +1,7 @@
-package com.egiwon.publictransport.data
+package com.egiwon.publictransport.data.service
 
 import com.egiwon.publictransport.data.response.ServiceResult
-import retrofit2.Call
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,5 +13,5 @@ interface StationService {
         serviceKey: String,
         @Query("stSrch", encoded = false)
         stationName: String
-    ): Call<ServiceResult>
+    ): Single<ServiceResult>
 }
