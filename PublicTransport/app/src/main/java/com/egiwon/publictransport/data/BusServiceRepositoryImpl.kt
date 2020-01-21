@@ -5,11 +5,9 @@ import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 class BusServiceRepositoryImpl(
     private val remoteDataSource: BusServiceRemoteDataSource
 ) : BusServiceRepository {
-    override fun getStationInfo(
-        stationName: String
-    ) = remoteDataSource.getRemoteBusStationInfo(
-        stationName = stationName
-    )
+
+    override fun getStationInfo(stationName: String) =
+        remoteDataSource.getRemoteBusStationInfo(stationName = stationName)
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null
