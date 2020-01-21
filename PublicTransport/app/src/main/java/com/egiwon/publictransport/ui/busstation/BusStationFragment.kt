@@ -11,8 +11,8 @@ import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.Item
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
-class BusStationFragment
-    : BaseFragment<BusStationPresenter>(R.layout.fragment_busstation), BusStationContract.View {
+class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.fragment_busstation),
+    BusStationContract.View {
 
     override val presenter: BusStationPresenter by lazy {
         BusStationPresenter(
@@ -43,7 +43,6 @@ class BusStationFragment
 
     override fun showErrorSearchNameEmpty() {
         showToast(R.string.error_empty_station_name)
-
     }
 
     override fun showErrorLoadBusStationFail() {
@@ -52,6 +51,12 @@ class BusStationFragment
 
     override fun showErrorResultEmpty() {
         showToast(R.string.empty_bus)
+    }
+
+    override fun sendFavouriteBusStation(station: Item) {
+        (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
+            it.onNext(station)
+        }
     }
 
     override fun showLoading() {
@@ -63,9 +68,7 @@ class BusStationFragment
     }
 
     private val onClick: (Item) -> Unit = { item ->
-        (requireActivity() as MainActivity).run {
-            setFavoriteSubject.onNext(item)
-        }
+        presenter.requestFavouriteBusStationToSend(item)
     }
 
     private fun hideEmptyBus() {

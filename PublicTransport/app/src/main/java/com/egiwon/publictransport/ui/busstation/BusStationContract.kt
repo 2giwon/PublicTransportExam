@@ -13,9 +13,13 @@ interface BusStationContract : BaseContract {
         fun showErrorLoadBusStationFail()
 
         fun showErrorResultEmpty()
+
+        fun sendFavouriteBusStation(station: Item)
     }
 
     interface Presenter : BaseContract.Presenter {
         fun requestBusStations(stationName: String)
+
+        fun requestFavouriteBusStationToSend(station: Item)
     }
 }

@@ -2,6 +2,7 @@ package com.egiwon.publictransport.ui.busstation
 
 import com.egiwon.publictransport.base.BasePresenter
 import com.egiwon.publictransport.data.BusServiceRepository
+import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class BusStationPresenter(
@@ -14,7 +15,7 @@ class BusStationPresenter(
             view.showErrorSearchNameEmpty()
         } else {
             repository.getStationInfo(stationName = stationName)
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
                 .subscribe({
@@ -29,4 +30,6 @@ class BusStationPresenter(
 
     }
 
+    override fun requestFavouriteBusStationToSend(station: Item) =
+        view.sendFavouriteBusStation(station)
 }
