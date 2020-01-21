@@ -4,6 +4,7 @@ import com.egiwon.publictransport.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 object StationSearchService {
@@ -22,6 +23,7 @@ object StationSearchService {
                 )
                 .build()
         )
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(SimpleXmlConverterFactory.create())
         .build()
         .create(StationService::class.java)
