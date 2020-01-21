@@ -1,29 +1,20 @@
 package com.egiwon.publictransport
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.egiwon.publictransport.base.BaseActivity
 import com.egiwon.publictransport.data.response.Item
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity :
+    BaseActivity<MainContract.Presenter>(R.layout.activity_main), MainContract.View {
 
-    val favouriteSet = mutableSetOf<Item>()
-
-    val setFavoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
-
-    private val compositeDisposable = CompositeDisposable()
-
-    private fun Disposable.addDisposable() {
-        compositeDisposable.add(this)
+    override val mainPresenter: MainContract.Presenter by lazy {
+        MainPresenter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,17 +29,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         nav_view.setupWithNavController(navController)
-
-        setFavoriteSubject.subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                favouriteSet.add(it)
-            }.addDisposable()
-
     }
 
-    override fun onDestroy() {
-        compositeDisposable.clear()
-        super.onDestroy()
-    }
+    fun requestFavoriteItemToSend(block: (BehaviorSubject<Item>) -> Unit) =
+        mainPresenter.requestFavoriteSubject(block)
+
+    fun requestFavoriteList(block: (List<Item>) -> Unit) =
+        mainPresenter.requestFavoriteList(block)
+
+    override fun showToast(textResId: Int) = Unit
+    override fun showToast(text: String) = Unit
+    override fun showLoading() = Unit
+    override fun hideLoading() = Unit
 }
