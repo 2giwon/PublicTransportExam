@@ -9,7 +9,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 object StationSearchService {
     val retrofit: StationService = Retrofit.Builder()
-        .baseUrl("http://ws.bus.go.kr/api/rest/")
+        .baseUrl("http://ws.bus.go.kr/")
         .client(
             OkHttpClient.Builder()
                 .addInterceptor(

@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface StationService {
 
-    @GET("stationinfo/getStationByName")
+    @GET("api/rest/stationinfo/getStationByName")
     fun getStationInfo(
         @Query("serviceKey", encoded = true)
         serviceKey: String,
