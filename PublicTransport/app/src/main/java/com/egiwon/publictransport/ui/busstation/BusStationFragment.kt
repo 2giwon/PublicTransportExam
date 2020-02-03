@@ -41,17 +41,14 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         (rv_station.adapter as? BusStationAdapter)?.setItems(resultList)
     }
 
-    override fun showErrorSearchNameEmpty() {
+    override fun showErrorSearchNameEmpty() =
         showToast(R.string.error_empty_station_name)
-    }
 
-    override fun showErrorLoadBusStationFail() {
+    override fun showErrorLoadBusStationFail() =
         showToast(R.string.error_load_station)
-    }
 
-    override fun showErrorResultEmpty() {
+    override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
-    }
 
     override fun sendFavouriteBusStation(station: Item) {
         (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
