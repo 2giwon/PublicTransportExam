@@ -1,6 +1,5 @@
 package com.egiwon.publictransport.ui.busstation
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -10,7 +9,6 @@ import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.Item
-import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
 class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.fragment_busstation),
@@ -47,7 +45,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         showToast(R.string.error_empty_station_name)
 
     override fun showErrorLoadBusStationFail() =
-        showToast(R.string.error_load_fail)
+        showToast(R.string.error_load_station)
 
     override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
@@ -67,11 +65,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     }
 
     private val onClick: (Item) -> Unit = { item ->
-        //        presenter.requestFavouriteBusStationToSend(item)
-        val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
-            putExtra("keyitem", item.arsId)
-        }
-        startActivity(intent)
+        presenter.requestFavouriteBusStationToSend(item)
     }
 
     private fun hideEmptyBus() {

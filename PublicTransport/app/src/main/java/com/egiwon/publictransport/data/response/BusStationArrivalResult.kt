@@ -72,7 +72,7 @@ data class ArrivalInfoItem(
     var posX: String = "",
     @field:Element(name = "posY")
     var posY: String = "",
-    @field:Element(name = "repTm1", required = false)
+    @field:Element(name = "repTm1")
     var repTm1: String = "",
     @field:Element(name = "rerdieDiv1")
     var rerdieDiv1: String = "",
@@ -98,9 +98,9 @@ data class ArrivalInfoItem(
     var stNm: String = "",
     @field:Element(name = "staOrd")
     var staOrd: String = "",
-    @field:Element(name = "stationNm1", required = false)
+    @field:Element(name = "stationNm1")
     var stationNm1: String = "",
-    @field:Element(name = "stationNm2", required = false)
+    @field:Element(name = "stationNm2")
     var stationNm2: String = "",
     @field:Element(name = "stationTp")
     var stationTp: String = "",
