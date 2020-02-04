@@ -47,9 +47,7 @@ class BusStationArrivalActivity(
         (rv_arrival_bus.adapter as? BusStationArrivalAdapter)?.setItems(arrivalItems)
     }
 
-    override fun showLoadFail(throwable: Throwable) {
-        showToast(getString(R.string.error_load_fail))
-    }
+    override fun showLoadFail(throwable: Throwable) = showToast(getString(R.string.error_load_fail))
 
     override fun showResultAddFavouriteBusStation(station: ArrivalInfoItem) {
         returnIntent.putExtra(KEY_RESULT_FAVOURITE, station.arsId)
