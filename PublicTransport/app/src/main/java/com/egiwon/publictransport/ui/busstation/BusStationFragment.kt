@@ -67,16 +67,22 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     }
 
     private val onClick: (Item) -> Unit = { item ->
-        //        presenter.requestFavouriteBusStationToSend(item)
+
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
-            putExtra("keyitem", item.arsId)
+            putExtra(KEY_ITEM, item.arsId)
         }
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_FAVOURITE_ITEM)
     }
 
     private fun hideEmptyBus() {
         iv_empty_bus.visibility = View.GONE
         tv_empty_bus.visibility = View.GONE
+    }
+
+    companion object {
+        const val KEY_ITEM = "keyitem"
+
+        const val REQUEST_FAVOURITE_ITEM = 1
     }
 
 }
