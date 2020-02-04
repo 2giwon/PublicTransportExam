@@ -10,6 +10,8 @@ class BusStationPresenter(
     private val repository: BusServiceRepository
 ) : BasePresenter(), BusStationContract.Presenter {
 
+    private val stationList = mutableListOf<Item>()
+
     override fun requestBusStations(stationName: String) {
         if (stationName.isBlank()) {
             view.showErrorSearchNameEmpty()
@@ -22,7 +24,8 @@ class BusStationPresenter(
                     if (it.isNullOrEmpty()) {
                         view.showErrorResultEmpty()
                     } else {
-                        view.showSearchBusStationResult(it)
+                        stationList.setItems(it)
+                        view.showSearchBusStationResult(stationList)
                     }
                 }, { view.showErrorLoadBusStationFail() })
                 .addDisposable()
@@ -30,6 +33,8 @@ class BusStationPresenter(
 
     }
 
-    override fun requestFavouriteBusStationToSend(station: Item) =
-        view.sendFavouriteBusStation(station)
+    private fun MutableList<Item>.setItems(items: List<Item>) {
+        clear()
+        addAll(items)
+    }
 }
