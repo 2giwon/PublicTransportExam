@@ -1,5 +1,6 @@
 package com.egiwon.publictransport.ui.busstation
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -66,6 +67,21 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         progress_circular.visibility = View.GONE
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_FAVOURITE_ITEM) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.getStringExtra(KEY_RESULT_FAVOURITE)?.let {
+                    findStationByArsId(it)
+                }
+
+            }
+        }
+    }
+
+    private fun findStationByArsId(arsId: String) {
+        presenter.requestFindBusStationByArsId(arsId)
+    }
+
     private val onClick: (Item) -> Unit = { item ->
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
@@ -81,6 +97,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     companion object {
         const val KEY_ITEM = "keyitem"
+        const val KEY_RESULT_FAVOURITE = "result_favourite"
 
         const val REQUEST_FAVOURITE_ITEM = 1
     }

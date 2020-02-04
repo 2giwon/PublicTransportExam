@@ -33,6 +33,16 @@ class BusStationPresenter(
 
     }
 
+    override fun requestFindBusStationByArsId(arsId: String) {
+        if (stationList.isNotEmpty()) {
+            stationList.find {
+                arsId == it.arsId
+            }?.let {
+                view.sendFavouriteBusStation(it)
+            }
+        }
+    }
+
     private fun MutableList<Item>.setItems(items: List<Item>) {
         clear()
         addAll(items)
