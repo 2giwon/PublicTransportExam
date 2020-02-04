@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class BusStationArrivalPresenter(
     private val view: BusStationArrivalContract.View,
     private val repository: BusServiceRepository
-) : BasePresenter(), BusStationArrivalContract.Presenter {
+) : BasePresenter<ArrivalInfoItem>(), BusStationArrivalContract.Presenter {
 
     private val arrivalInfoList = mutableListOf<ArrivalInfoItem>()
 
@@ -33,11 +33,6 @@ class BusStationArrivalPresenter(
                 view.showResultAddFavouriteBusStation(it)
             }
         }
-    }
-
-    private fun MutableList<ArrivalInfoItem>.setItems(items: List<ArrivalInfoItem>) {
-        clear()
-        addAll(items)
     }
 
 }

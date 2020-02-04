@@ -8,7 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class BusStationPresenter(
     private val view: BusStationContract.View,
     private val repository: BusServiceRepository
-) : BasePresenter(), BusStationContract.Presenter {
+) : BasePresenter<Item>(), BusStationContract.Presenter {
 
     private val stationList = mutableListOf<Item>()
 
@@ -43,8 +43,4 @@ class BusStationPresenter(
         }
     }
 
-    private fun MutableList<Item>.setItems(items: List<Item>) {
-        clear()
-        addAll(items)
-    }
 }
