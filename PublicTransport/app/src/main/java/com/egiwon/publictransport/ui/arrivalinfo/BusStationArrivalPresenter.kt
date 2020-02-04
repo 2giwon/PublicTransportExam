@@ -15,6 +15,8 @@ class BusStationArrivalPresenter(
     override fun getBusStationArrivalInfo(arsId: String) {
         repository.getBusStationArrivalInfo(arsId)
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view.showLoading() }
+            .doAfterTerminate { view.hideLoading() }
             .subscribe({
                 arrivalInfoList.setItems(it)
                 view.showBusStationArrivalInfo(arrivalInfoList)

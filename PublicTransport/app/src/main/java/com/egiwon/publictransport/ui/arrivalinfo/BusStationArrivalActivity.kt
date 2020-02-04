@@ -3,6 +3,7 @@ package com.egiwon.publictransport.ui.arrivalinfo
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.LayoutRes
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseActivity
@@ -56,6 +57,13 @@ class BusStationArrivalActivity(
         setResult(Activity.RESULT_OK, returnIntent)
     }
 
+    override fun showLoading() {
+        progress_circular.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        progress_circular.visibility = View.GONE
+    }
 
     private fun addFavouriteBusStation(arsId: String) {
         mainPresenter.addFavouriteBusStation(arsId)
