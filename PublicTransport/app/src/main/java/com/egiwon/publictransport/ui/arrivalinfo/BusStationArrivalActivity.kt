@@ -1,5 +1,7 @@
 package com.egiwon.publictransport.ui.arrivalinfo
 
+
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import com.egiwon.publictransport.R
@@ -7,11 +9,14 @@ import com.egiwon.publictransport.base.BaseActivity
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
 import kotlinx.android.synthetic.main.activity_bus_arrival_info.*
 
 class BusStationArrivalActivity(
     @LayoutRes private val layoutResId: Int = R.layout.activity_bus_arrival_info
 ) : BaseActivity<BusStationArrivalPresenter>(layoutResId), BusStationArrivalContract.View {
+
+    private val returnIntent: Intent = Intent()
 
     override val mainPresenter: BusStationArrivalPresenter by lazy {
         BusStationArrivalPresenter(
@@ -26,9 +31,10 @@ class BusStationArrivalActivity(
         rv_arrival_bus.adapter = BusStationArrivalAdapter()
         rv_arrival_bus.setHasFixedSize(true)
 
-        intent.extras?.getString("keyitem")?.let {
-            mainPresenter.getBusStationArrivalInfo(it)
+        intent.extras?.getString(KEY_ITEM)?.let { arsId ->
+            mainPresenter.getBusStationArrivalInfo(arsId)
         }
+
     }
 
     override fun showBusStationArrivalInfo(arrivalItems: List<ArrivalInfoItem>) {
