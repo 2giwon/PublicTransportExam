@@ -9,9 +9,13 @@ interface BusStationArrivalContract : BaseContract {
         fun showBusStationArrivalInfo(arrivalItems: List<ArrivalInfoItem>)
 
         fun showLoadFail(throwable: Throwable)
+
+        fun showResultAddFavouriteBusStation(station: ArrivalInfoItem)
     }
 
     interface Presenter : BaseContract.Presenter {
         fun getBusStationArrivalInfo(arsId: String)
+
+        fun addFavouriteBusStation(arsId: String)
     }
 }

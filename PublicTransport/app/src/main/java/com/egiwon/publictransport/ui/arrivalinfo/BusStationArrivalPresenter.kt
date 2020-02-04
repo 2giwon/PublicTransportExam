@@ -23,6 +23,16 @@ class BusStationArrivalPresenter(
             }).addDisposable()
     }
 
+    override fun addFavouriteBusStation(arsId: String) {
+        if (arrivalInfoList.isNotEmpty()) {
+            arrivalInfoList.find {
+                arsId == it.arsId
+            }?.let {
+                view.showResultAddFavouriteBusStation(it)
+            }
+        }
+    }
+
     private fun MutableList<ArrivalInfoItem>.setItems(items: List<ArrivalInfoItem>) {
         clear()
         addAll(items)
