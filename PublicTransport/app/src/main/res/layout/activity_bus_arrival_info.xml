@@ -19,24 +19,20 @@
             android:src="@drawable/ic_fill_star_24px"
             app:backgroundTint="@color/colorYellow" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_arrival_bus"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ECEEF1"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_bus_arrival" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_arrival_bus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ECEEF1"
+                app:layoutManager="LinearLayoutManager"
+                tools:listitem="@layout/item_bus_arrival" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_circular"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
