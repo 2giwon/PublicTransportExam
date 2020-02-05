@@ -10,12 +10,18 @@ interface BusStationArrivalContract : BaseContract {
 
         fun showLoadFail(throwable: Throwable)
 
-        fun showResultAddFavouriteBusStation(station: ArrivalInfoItem)
+        fun showResultAddFavoriteBusStation(station: ArrivalInfoItem)
+
+        fun showFavoriteButton()
+
+        fun hideFavoriteButton()
     }
 
     interface Presenter : BaseContract.Presenter {
         fun getBusStationArrivalInfo(arsId: String)
 
-        fun addFavouriteBusStation(arsId: String)
+        fun addFavoriteBusStation(arsId: String)
+
+        fun findFavoriteBusStationByArsId(arsId: String)
     }
 }

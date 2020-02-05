@@ -25,14 +25,23 @@ class BusStationArrivalPresenter(
             }).addDisposable()
     }
 
-    override fun addFavouriteBusStation(arsId: String) {
+    override fun addFavoriteBusStation(arsId: String) {
         if (arrivalInfoList.isNotEmpty()) {
             arrivalInfoList.find {
                 arsId == it.arsId
             }?.let {
-                view.showResultAddFavouriteBusStation(it)
+                view.showResultAddFavoriteBusStation(it)
             }
         }
+    }
+
+    override fun findFavoriteBusStationByArsId(arsId: String) {
+        repository.findFavoriteBusStationByArsId(arsId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+            }, {})
+            .addDisposable()
     }
 
 }

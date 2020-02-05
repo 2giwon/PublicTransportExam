@@ -10,12 +10,18 @@ import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ext.toStationId
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
-class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteStationViewHolder>() {
+class FavoriteAdapter(
+    private val onClick: (Item) -> Unit
+) : RecyclerView.Adapter<FavoriteAdapter.FavoriteStationViewHolder>() {
 
     private val favoriteStationList = ArrayList<Item>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStationViewHolder =
-        FavoriteStationViewHolder(parent = parent)
+        FavoriteStationViewHolder(parent = parent).apply {
+            itemView.setOnClickListener {
+                onClick(favoriteStationList[adapterPosition])
+            }
+        }
 
     override fun getItemCount(): Int = favoriteStationList.size
 

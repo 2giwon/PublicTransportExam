@@ -8,4 +8,8 @@ interface BusServiceRepository {
     fun getStationInfo(stationName: String): Single<List<Item>>
 
     fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>>
+
+    fun findFavoriteBusStationByArsId(arsId: String): Single<Item>
+
+    fun addFavoriteBusStationByArsId(arsId: String)
 }
