@@ -8,7 +8,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 class MainPresenter(
     private val view: MainContract.View
-) : BasePresenter(), MainContract.Presenter {
+) : BasePresenter<Item>(), MainContract.Presenter {
 
     private val favouriteSet = mutableSetOf<Item>()
 

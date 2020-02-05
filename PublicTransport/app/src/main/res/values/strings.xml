@@ -3,8 +3,9 @@
     <string name="title_home">BusStation</string>
     <string name="title_favorite">Favorite</string>
     <string name="search_station_hint">정류장을 검색해주세요</string>
-    <string name="error_load_station">불러오기 실패</string>
+    <string name="error_load_fail">불러오기 실패</string>
     <string name="error_empty_station_name">정류장을 입력해 주세요.</string>
     <string name="empty_bus">Empty Bus</string>
-
+    <string name="bus_way">%1$s 방향</string>
+    <string name="add_favourite_bus_station">%1$s(이)가 즐겨찾기로 추가되었습니다.</string>
 </resources>

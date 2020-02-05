@@ -8,7 +8,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class BusStationPresenter(
     private val view: BusStationContract.View,
     private val repository: BusServiceRepository
-) : BasePresenter(), BusStationContract.Presenter {
+) : BasePresenter<Item>(), BusStationContract.Presenter {
+
+    private val stationList = mutableListOf<Item>()
 
     override fun requestBusStations(stationName: String) {
         if (stationName.isBlank()) {
@@ -22,7 +24,8 @@ class BusStationPresenter(
                     if (it.isNullOrEmpty()) {
                         view.showErrorResultEmpty()
                     } else {
-                        view.showSearchBusStationResult(it)
+                        stationList.setItems(it)
+                        view.showSearchBusStationResult(stationList)
                     }
                 }, { view.showErrorLoadBusStationFail() })
                 .addDisposable()
@@ -30,6 +33,14 @@ class BusStationPresenter(
 
     }
 
-    override fun requestFavouriteBusStationToSend(station: Item) =
-        view.sendFavouriteBusStation(station)
+    override fun requestFindBusStationByArsId(arsId: String) {
+        if (stationList.isNotEmpty()) {
+            stationList.find {
+                arsId == it.arsId
+            }?.let {
+                view.sendFavouriteBusStation(it)
+            }
+        }
+    }
+
 }

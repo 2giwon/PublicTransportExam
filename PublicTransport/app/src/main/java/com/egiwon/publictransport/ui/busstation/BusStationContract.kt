@@ -20,6 +20,6 @@ interface BusStationContract : BaseContract {
     interface Presenter : BaseContract.Presenter {
         fun requestBusStations(stationName: String)
 
-        fun requestFavouriteBusStationToSend(station: Item)
+        fun requestFindBusStationByArsId(arsId: String)
     }
 }
