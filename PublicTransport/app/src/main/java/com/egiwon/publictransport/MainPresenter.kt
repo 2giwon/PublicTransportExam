@@ -10,7 +10,7 @@ class MainPresenter(
     private val view: MainContract.View
 ) : BasePresenter<Item>(), MainContract.Presenter {
 
-    private val favouriteSet = mutableSetOf<Item>()
+    private val favoriteSet = mutableSetOf<Item>()
 
     private val _favoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
     private val favoriteSubject: BehaviorSubject<Item> get() = _favoriteSubject
@@ -19,7 +19,7 @@ class MainPresenter(
         _favoriteSubject.subscribeOn(Schedulers.single())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                favouriteSet.add(it)
+                favoriteSet.add(it)
             }.addDisposable()
     }
 
@@ -28,7 +28,7 @@ class MainPresenter(
     }
 
     override fun requestFavoriteList(block: (List<Item>) -> Unit) {
-        block(favouriteSet.toList())
+        block(favoriteSet.toList())
     }
 
 

@@ -38,7 +38,7 @@ class BusStationPresenter(
             stationList.find {
                 arsId == it.arsId
             }?.let {
-                view.sendFavouriteBusStation(it)
+                view.sendFavoriteBusStation(it)
             }
         }
     }

@@ -14,7 +14,7 @@ interface BusStationContract : BaseContract {
 
         fun showErrorResultEmpty()
 
-        fun sendFavouriteBusStation(station: Item)
+        fun sendFavoriteBusStation(station: Item)
     }
 
     interface Presenter : BaseContract.Presenter {

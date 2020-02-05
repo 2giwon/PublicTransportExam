@@ -53,7 +53,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
 
-    override fun sendFavouriteBusStation(station: Item) {
+    override fun sendFavoriteBusStation(station: Item) {
         (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
             it.onNext(station)
         }
@@ -68,9 +68,9 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_FAVOURITE_ITEM) {
+        if (requestCode == REQUEST_FAVORITE_ITEM) {
             if (resultCode == Activity.RESULT_OK) {
-                data?.getStringExtra(KEY_RESULT_FAVOURITE)?.let {
+                data?.getStringExtra(KEY_RESULT_FAVORITE)?.let {
                     findStationByArsId(it)
                 }
 
@@ -87,7 +87,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, item.arsId)
         }
-        startActivityForResult(intent, REQUEST_FAVOURITE_ITEM)
+        startActivityForResult(intent, REQUEST_FAVORITE_ITEM)
     }
 
     private fun hideEmptyBus() {
@@ -97,9 +97,9 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     companion object {
         const val KEY_ITEM = "keyitem"
-        const val KEY_RESULT_FAVOURITE = "result_favourite"
+        const val KEY_RESULT_FAVORITE = "result_favorite"
 
-        const val REQUEST_FAVOURITE_ITEM = 1
+        const val REQUEST_FAVORITE_ITEM = 1
     }
 
 }

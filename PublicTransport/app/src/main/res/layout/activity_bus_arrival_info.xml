@@ -11,7 +11,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/Widget.MaterialComponents.FloatingActionButton"
-            android:id="@+id/fb_favourite_bus"
+            android:id="@+id/fb_favorite_bus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

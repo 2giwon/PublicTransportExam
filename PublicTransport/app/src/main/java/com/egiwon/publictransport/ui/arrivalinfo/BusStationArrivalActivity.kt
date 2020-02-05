@@ -10,14 +10,14 @@ import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
-import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_RESULT_FAVOURITE
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_RESULT_FAVORITE
 import kotlinx.android.synthetic.main.activity_bus_arrival_info.*
 
 class BusStationArrivalActivity(
     @LayoutRes private val layoutResId: Int = R.layout.activity_bus_arrival_info
 ) : BaseActivity<BusStationArrivalPresenter>(layoutResId), BusStationArrivalContract.View {
 
-    private val returnIntent: Intent = Intent()
+    private val favoriteDeliveryIntent: Intent = Intent()
 
     override val mainPresenter: BusStationArrivalPresenter by lazy {
         BusStationArrivalPresenter(
@@ -32,10 +32,10 @@ class BusStationArrivalActivity(
         rv_arrival_bus.adapter = BusStationArrivalAdapter()
         rv_arrival_bus.setHasFixedSize(true)
 
-        intent.extras?.getString(KEY_ITEM)?.let { arsId ->
+        favoriteDeliveryIntent.extras?.getString(KEY_ITEM)?.let { arsId ->
             mainPresenter.getBusStationArrivalInfo(arsId)
 
-            fb_favourite_bus.setOnClickListener {
+            fb_favorite_bus.setOnClickListener {
                 addFavouriteBusStation(arsId)
             }
 
@@ -53,9 +53,9 @@ class BusStationArrivalActivity(
     override fun showLoadFail(throwable: Throwable) = showToast(getString(R.string.error_load_fail))
 
     override fun showResultAddFavouriteBusStation(station: ArrivalInfoItem) {
-        returnIntent.putExtra(KEY_RESULT_FAVOURITE, station.arsId)
-        showToast(getString(R.string.add_favourite_bus_station, station.stNm))
-        setResult(Activity.RESULT_OK, returnIntent)
+        favoriteDeliveryIntent.putExtra(KEY_RESULT_FAVORITE, station.arsId)
+        showToast(getString(R.string.add_favorite_bus_station, station.stNm))
+        setResult(Activity.RESULT_OK, favoriteDeliveryIntent)
     }
 
     override fun showLoading() {
