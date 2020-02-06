@@ -11,15 +11,19 @@ class BusServiceRepositoryImpl(
     private val localDataSource: BusServiceLocalDataSource
 ) : BusServiceRepository {
 
-    private val busStations = mutableMapOf<String, List<Item>>()
+    private val busStations = mutableListOf<Item>()
 
-    override fun getStationInfo(stationName: String): Single<List<Item>> {
-        return Single.fromCallable<List<Item>> {
-            busStations[stationName]?.let { list ->
-                list.takeIf { it.isNotEmpty() }
+    override fun getStationInfo(stationName: String): Single<List<Item>> =
+        remoteDataSource.getRemoteBusStationInfo(stationName)
+            .flatMap {
+                if (it.isNotEmpty()) {
+                    busStations.clear()
+                    busStations.addAll(it)
+                    Single.fromCallable { busStations }
+                } else {
+                    Single.fromCallable { emptyList<Item>() }
+                }
             }
-        }
-    }
 
     override fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>> =
         remoteDataSource.getBusStationArrivalInfo(arsId)
@@ -28,9 +32,8 @@ class BusServiceRepositoryImpl(
         localDataSource.getFavoriteBusStationByArsId(arsId)
 
     override fun addFavoriteBusStationByArsId(arsId: String) {
-
+        busStations
     }
-
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null
