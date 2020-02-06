@@ -3,6 +3,7 @@ package com.egiwon.publictransport.ui.busstation
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.egiwon.publictransport.MainActivity
@@ -13,6 +14,7 @@ import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
 import com.egiwon.publictransport.data.local.FavoriteBusStationDatabase
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.ext.hideKeyboard
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
@@ -44,6 +46,19 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+        initSearch()
+    }
+
+    private fun initSearch() {
+        et_search.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                presenter.requestBusStations(et_search.text.toString())
+                requireContext().hideKeyboard()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     override fun showSearchBusStationResult(resultList: List<Item>) {
