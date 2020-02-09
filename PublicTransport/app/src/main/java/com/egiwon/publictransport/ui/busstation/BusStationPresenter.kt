@@ -12,13 +12,24 @@ class BusStationPresenter(
 
     private val stationList = mutableListOf<Item>()
 
+
+    override fun requestBusStations() {
+        repository.getStationCache()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                view.showSearchBusCache(it.busStations, it.stationName)
+            }, {
+
+            }).addDisposable()
+    }
+
     override fun requestBusStations(stationName: String) {
         if (stationName.isBlank()) {
             view.showErrorSearchNameEmpty()
         } else {
             repository.getStationInfo(stationName = stationName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess { view.showLoading() }
+                .doOnSubscribe { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
                 .subscribe({
                     if (it.isNullOrEmpty()) {
@@ -27,7 +38,9 @@ class BusStationPresenter(
                         stationList.setItems(it)
                         view.showSearchBusStationResult(stationList)
                     }
-                }, { view.showErrorLoadBusStationFail() })
+                }, {
+                    view.showErrorLoadBusStationFail()
+                })
                 .addDisposable()
         }
 

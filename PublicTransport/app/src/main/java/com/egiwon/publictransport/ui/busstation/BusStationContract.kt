@@ -14,10 +14,14 @@ interface BusStationContract : BaseContract {
 
         fun showErrorResultEmpty()
 
+        fun showSearchBusCache(resultList: List<Item>, searchQuery: String)
+
         fun sendFavoriteBusStation(station: Item)
     }
 
     interface Presenter : BaseContract.Presenter {
+        fun requestBusStations()
+
         fun requestBusStations(stationName: String)
 
         fun requestFindBusStationByArsId(arsId: String)

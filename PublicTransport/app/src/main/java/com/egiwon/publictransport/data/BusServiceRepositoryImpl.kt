@@ -1,6 +1,7 @@
 package com.egiwon.publictransport.data
 
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSource
+import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import com.egiwon.publictransport.data.response.Item
@@ -11,29 +12,20 @@ class BusServiceRepositoryImpl(
     private val localDataSource: BusServiceLocalDataSource
 ) : BusServiceRepository {
 
-    private val busStations = mutableListOf<Item>()
-
     override fun getStationInfo(stationName: String): Single<List<Item>> =
+        getStationFromRemote(stationName)
+
+    override fun getStationCache(): Single<BusStations> = localDataSource.getBusStationsCache()
+
+    private fun getStationFromLocal(stationName: String): Single<List<Item>> =
+        localDataSource.getBusStations(stationName)
+
+    private fun getStationFromRemote(stationName: String): Single<List<Item>> =
         remoteDataSource.getRemoteBusStationInfo(stationName)
-            .flatMap {
-                if (it.isNotEmpty()) {
-                    busStations.clear()
-                    busStations.addAll(it)
-                    Single.fromCallable { busStations }
-                } else {
-                    Single.fromCallable { emptyList<Item>() }
-                }
-            }
+            .doOnSuccess { items -> localDataSource.insertBusStation(stationName, items) }
 
     override fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>> =
         remoteDataSource.getBusStationArrivalInfo(arsId)
-
-    override fun findFavoriteBusStationByArsId(arsId: String): Single<Item> =
-        localDataSource.getFavoriteBusStationByArsId(arsId)
-
-    override fun addFavoriteBusStationByArsId(arsId: String) {
-        busStations
-    }
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null
