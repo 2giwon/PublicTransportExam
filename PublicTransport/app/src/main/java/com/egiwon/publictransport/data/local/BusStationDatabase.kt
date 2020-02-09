@@ -4,27 +4,30 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.egiwon.publictransport.data.local.model.FavoriteBusStation
+import androidx.room.TypeConverters
+import com.egiwon.publictransport.data.local.model.BusListTypeConverter
+import com.egiwon.publictransport.data.local.model.BusStations
 
 @Database(
-    entities = [FavoriteBusStation::class],
+    entities = [BusStations::class],
     version = 1,
     exportSchema = false
 )
-abstract class FavoriteBusStationDatabase : RoomDatabase() {
-    abstract fun favoriteBusStationDao(): FavoriteBusStationDao
+@TypeConverters(BusListTypeConverter::class)
+abstract class BusStationDatabase : RoomDatabase() {
+    abstract fun busStationDao(): BusStationDao
 
     companion object {
-        private var instance: FavoriteBusStationDatabase? = null
+        private var instance: BusStationDatabase? = null
 
         private val lock = Any()
 
-        fun getInstance(context: Context): FavoriteBusStationDatabase {
+        fun getInstance(context: Context): BusStationDatabase {
             synchronized(lock) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        FavoriteBusStationDatabase::class.java, "FavoriteBusStation.db"
+                        BusStationDatabase::class.java, "BusStation.db"
                     ).build()
                 }
 
