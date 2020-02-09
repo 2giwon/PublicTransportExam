@@ -21,7 +21,5 @@ interface BusStationArrivalContract : BaseContract {
         fun getBusStationArrivalInfo(arsId: String)
 
         fun addFavoriteBusStation(arsId: String)
-
-        fun findFavoriteBusStationByArsId(arsId: String)
     }
 }

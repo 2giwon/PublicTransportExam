@@ -34,14 +34,4 @@ class BusStationArrivalPresenter(
             }
         }
     }
-
-    override fun findFavoriteBusStationByArsId(arsId: String) {
-        repository.findFavoriteBusStationByArsId(arsId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-            }, {})
-            .addDisposable()
-    }
-
 }
