@@ -11,7 +11,7 @@ import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
-import com.egiwon.publictransport.data.local.FavoriteBusStationDatabase
+import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ext.hideKeyboard
@@ -27,7 +27,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             BusServiceRepositoryImpl.getInstance(
                 BusServiceRemoteDataSourceImpl.getInstance(),
                 BusServiceLocalDataSourceImpl.getInstance(
-                    FavoriteBusStationDatabase.getInstance(requireContext()).favoriteBusStationDao()
+                    BusStationDatabase.getInstance(requireContext()).busStationDao()
                 )
             )
         )
@@ -46,6 +46,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+        presenter.requestBusStations()
         initSearch()
     }
 
@@ -64,6 +65,11 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showSearchBusStationResult(resultList: List<Item>) {
         hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(resultList)
+    }
+
+    override fun showSearchBusCache(resultList: List<Item>, searchQuery: String) {
+        showSearchBusStationResult(resultList)
+        et_search.setText(searchQuery)
     }
 
     override fun showErrorSearchNameEmpty() =

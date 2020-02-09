@@ -9,7 +9,7 @@ import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
-import com.egiwon.publictransport.data.local.FavoriteBusStationDatabase
+import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
@@ -25,7 +25,7 @@ class FavoriteFragment
             BusServiceRepositoryImpl.getInstance(
                 BusServiceRemoteDataSourceImpl.getInstance(),
                 BusServiceLocalDataSourceImpl.getInstance(
-                    FavoriteBusStationDatabase.getInstance(requireContext()).favoriteBusStationDao()
+                    BusStationDatabase.getInstance(requireContext()).busStationDao()
                 )
             )
         )

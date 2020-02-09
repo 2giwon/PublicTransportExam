@@ -9,7 +9,7 @@ import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseActivity
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
-import com.egiwon.publictransport.data.local.FavoriteBusStationDatabase
+import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
@@ -28,7 +28,7 @@ class BusStationArrivalActivity(
             BusServiceRepositoryImpl.getInstance(
                 BusServiceRemoteDataSourceImpl.getInstance(),
                 BusServiceLocalDataSourceImpl.getInstance(
-                    FavoriteBusStationDatabase.getInstance(applicationContext).favoriteBusStationDao()
+                    BusStationDatabase.getInstance(applicationContext).busStationDao()
                 )
             )
         )
