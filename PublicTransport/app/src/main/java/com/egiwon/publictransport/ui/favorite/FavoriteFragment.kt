@@ -34,7 +34,7 @@ class FavoriteFragment
         super.onViewCreated(view, savedInstanceState)
 
         with(rv_favorite_station) {
-            adapter = FavoriteAdapter(onClick)
+            adapter = FavoriteAdapter(onClick, onDeleteClick)
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             presenter.requestFavoriteStationList()
@@ -52,12 +52,20 @@ class FavoriteFragment
         showToast(getString(R.string.error_favorite_load_fail))
     }
 
+    override fun refreshFavoriteAdapterList() {
+        presenter.requestFavoriteStationList()
+    }
+
     private val onClick: (BusStation) -> Unit = {
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, it.arsId)
         }
         startActivity(intent)
+    }
+
+    private val onDeleteClick: (BusStation) -> Unit = {
+        presenter.deleteFavoriteStation(it)
     }
 
     override fun showLoading() = Unit

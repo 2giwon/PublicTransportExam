@@ -5,6 +5,7 @@ import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class BusServiceRepositoryImpl(
@@ -29,6 +30,9 @@ class BusServiceRepositoryImpl(
 
     override fun addFavoriteBusStation(arsId: String, stationName: String) =
         localDataSource.insertBusStation(BusStation(arsId, stationName))
+
+    override fun deleteFavoriteBusStation(busStation: BusStation): Completable =
+        localDataSource.deleteBusStation(busStation)
 
     override fun getFavoriteBusStations(): Single<List<BusStation>> =
         localDataSource.getFavoriteBusStation()

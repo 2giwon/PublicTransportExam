@@ -13,5 +13,7 @@ interface BusServiceRepository {
 
     fun addFavoriteBusStation(arsId: String, stationName: String): Completable
 
+    fun deleteFavoriteBusStation(busStation: BusStation): Completable
+
     fun getFavoriteBusStations(): Single<List<BusStation>>
 }

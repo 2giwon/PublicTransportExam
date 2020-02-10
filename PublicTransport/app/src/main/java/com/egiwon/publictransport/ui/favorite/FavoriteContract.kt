@@ -9,9 +9,13 @@ interface FavoriteContract : BaseContract {
         fun showFavoriteStationList(favoriteBusStations: List<BusStation>)
 
         fun errorFavoriteStationsLoadFail()
+
+        fun refreshFavoriteAdapterList()
     }
 
     interface Presenter : BaseContract.Presenter {
         fun requestFavoriteStationList()
+
+        fun deleteFavoriteStation(busStation: BusStation)
     }
 }
