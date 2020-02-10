@@ -6,9 +6,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.egiwon.publictransport.base.BaseActivity
-import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.local.model.BusStations
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity :
@@ -31,12 +29,6 @@ class MainActivity :
         setupActionBarWithNavController(navController, appBarConfiguration)
         nav_view.setupWithNavController(navController)
     }
-
-    fun requestFavoriteItemToSend(block: (BehaviorSubject<BusStation>) -> Unit) =
-        mainPresenter.requestFavoriteSubject(block)
-
-    fun requestFavoriteList(block: (List<BusStation>) -> Unit) =
-        mainPresenter.requestFavoriteList(block)
 
     fun getBusStation(block: () -> BusStations) =
         mainPresenter.getSearchBusStationResult(block)
