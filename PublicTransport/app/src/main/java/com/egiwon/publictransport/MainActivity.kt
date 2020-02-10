@@ -34,11 +34,5 @@ class MainActivity :
     fun requestFavoriteItemToSend(block: (BehaviorSubject<Item>) -> Unit) =
         mainPresenter.requestFavoriteSubject(block)
 
-    fun requestFavoriteList(block: (List<Item>) -> Unit) =
-        mainPresenter.requestFavoriteList(block)
-
-    override fun showToast(textResId: Int) = Unit
-    override fun showToast(text: String) = Unit
-    override fun showLoading() = Unit
-    override fun hideLoading() = Unit
+    fun requestFavoriteList(block: (List<Item>) -> Unit) = mainPresenter.requestFavoriteList(block)
 }

@@ -10,6 +10,7 @@ interface MainContract : BaseContract {
 
     interface Presenter : BaseContract.Presenter {
         fun requestFavoriteSubject(block: (BehaviorSubject<Item>) -> Unit)
+
         fun requestFavoriteList(block: (List<Item>) -> Unit)
     }
 }
