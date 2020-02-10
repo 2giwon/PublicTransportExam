@@ -12,11 +12,6 @@ class BusServiceLocalDataSourceImpl(
             .toSingle()
             .subscribeOn(Schedulers.io())
 
-    override fun getBusStationsCache(): Single<BusStations> =
-        dao.getBusStationsCache()
-            .toSingle()
-            .subscribeOn(Schedulers.io())
-
     override fun insertBusStation(busStations: BusStations) =
         dao.insertBusStation(busStations)
 

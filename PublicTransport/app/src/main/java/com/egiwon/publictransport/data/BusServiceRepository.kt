@@ -7,7 +7,5 @@ import io.reactivex.Single
 interface BusServiceRepository {
     fun getStationInfo(stationName: String): Single<BusStations>
 
-    fun getStationCache(): Single<BusStations>
-
     fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>>
 }

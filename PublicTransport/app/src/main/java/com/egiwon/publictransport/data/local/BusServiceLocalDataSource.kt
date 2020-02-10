@@ -6,8 +6,6 @@ import io.reactivex.Single
 interface BusServiceLocalDataSource {
     fun getBusStations(query: String): Single<BusStations>
 
-    fun getBusStationsCache(): Single<BusStations>
-
     fun insertBusStation(busStations: BusStations)
 
     fun deleteBusStation(busStations: BusStations)

@@ -15,8 +15,6 @@ class BusServiceRepositoryImpl(
     override fun getStationInfo(stationName: String): Single<BusStations> =
         getStationFromRemote(stationName)
 
-    override fun getStationCache(): Single<BusStations> = localDataSource.getBusStationsCache()
-
     private fun getStationFromRemote(stationName: String): Single<BusStations> =
         remoteDataSource.getRemoteBusStationInfo(stationName)
             .map { responseItems ->
