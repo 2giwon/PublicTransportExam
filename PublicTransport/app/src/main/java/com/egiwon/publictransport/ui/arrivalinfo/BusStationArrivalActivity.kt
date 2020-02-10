@@ -42,7 +42,6 @@ class BusStationArrivalActivity(
 
         intent.extras?.getString(KEY_ITEM)?.let { arsId ->
             mainPresenter.getBusStationArrivalInfo(arsId)
-            mainPresenter.findFavoriteBusStationByArsId(arsId)
 
             fb_favorite_bus.setOnClickListener {
                 addFavoriteBusStation(arsId)
