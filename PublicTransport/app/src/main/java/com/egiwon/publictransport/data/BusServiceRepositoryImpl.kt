@@ -12,24 +12,18 @@ class BusServiceRepositoryImpl(
     private val localDataSource: BusServiceLocalDataSource
 ) : BusServiceRepository {
 
-    override fun getStationInfo(stationName: String): Single<List<BusStation>> =
+    override fun getStationInfo(stationName: String): Single<BusStations> =
         getStationFromRemote(stationName)
 
     override fun getStationCache(): Single<BusStations> = localDataSource.getBusStationsCache()
 
-    private fun getStationFromLocal(stationName: String): Single<List<BusStation>> =
-        localDataSource.getBusStations(stationName)
-            .onErrorReturn { BusStations("", emptyList(), 0L) }
-            .map { it.busStations }
-
-    private fun getStationFromRemote(stationName: String): Single<List<BusStation>> =
+    private fun getStationFromRemote(stationName: String): Single<BusStations> =
         remoteDataSource.getRemoteBusStationInfo(stationName)
             .map { responseItems ->
-                responseItems.map { BusStation(it.arsId, false, it.stNm) }
-            }
-            .doOnSuccess { item ->
-                localDataSource.insertBusStation(
-                    BusStations(stationName, item, System.currentTimeMillis())
+                BusStations(
+                    stationName,
+                    responseItems.map { BusStation(it.arsId, false, it.stNm) },
+                    System.currentTimeMillis()
                 )
             }
 
