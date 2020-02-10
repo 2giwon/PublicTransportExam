@@ -80,7 +80,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     override fun showSearchBusCache(busStations: BusStations) {
         showSearchBusStationResult(busStations)
-        et_search.setText(busStations.stationName)
+        et_search.setText(busStations.searchQuery)
     }
 
     override fun showErrorSearchNameEmpty() =
@@ -91,12 +91,6 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
-
-    override fun sendFavoriteBusStation(station: BusStation) {
-        (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
-            it.onNext(station)
-        }
-    }
 
     override fun showLoading() {
         progress_circular.visibility = View.VISIBLE
