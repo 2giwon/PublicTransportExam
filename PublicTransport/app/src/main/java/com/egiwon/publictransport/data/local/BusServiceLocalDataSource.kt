@@ -1,12 +1,13 @@
 package com.egiwon.publictransport.data.local
 
-import com.egiwon.publictransport.data.local.model.BusStations
+import com.egiwon.publictransport.data.local.model.BusStation
+import io.reactivex.Completable
 import io.reactivex.Single
 
 interface BusServiceLocalDataSource {
-    fun getBusStations(query: String): Single<BusStations>
+    fun getFavoriteBusStation(): Single<List<BusStation>>
 
-    fun insertBusStation(busStations: BusStations)
+    fun insertBusStation(busStation: BusStation): Completable
 
-    fun deleteBusStation(busStations: BusStations)
+    fun deleteBusStation(busStation: BusStation): Completable
 }

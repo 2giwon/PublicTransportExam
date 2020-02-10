@@ -1,22 +1,26 @@
 package com.egiwon.publictransport.data.local
 
-import com.egiwon.publictransport.data.local.model.BusStations
+import com.egiwon.publictransport.data.local.model.BusStation
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 class BusServiceLocalDataSourceImpl(
     private val dao: BusStationDao
 ) : BusServiceLocalDataSource {
-    override fun getBusStations(query: String): Single<BusStations> =
-        dao.getBusStations(query)
+
+    override fun getFavoriteBusStation(): Single<List<BusStation>> =
+        dao.getFavoriteBusStations()
             .toSingle()
             .subscribeOn(Schedulers.io())
 
-    override fun insertBusStation(busStations: BusStations) =
-        dao.insertBusStation(busStations)
+    override fun insertBusStation(busStation: BusStation): Completable =
+        dao.insertBusStation(busStation)
+            .subscribeOn(Schedulers.io())
 
-    override fun deleteBusStation(busStations: BusStations) =
-        dao.deleteBusStations(busStations)
+    override fun deleteBusStation(busStation: BusStation): Completable =
+        dao.deleteBusStations(busStation)
+            .subscribeOn(Schedulers.io())
 
     companion object {
         private var instance: BusServiceLocalDataSource? = null
