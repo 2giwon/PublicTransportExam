@@ -76,6 +76,7 @@ dependencies {
 
     // swipe
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
     // Test
     testImplementation 'junit:junit:4.13'
