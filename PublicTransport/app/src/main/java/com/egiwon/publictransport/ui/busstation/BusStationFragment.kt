@@ -1,6 +1,5 @@
 package com.egiwon.publictransport.ui.busstation
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
@@ -47,8 +46,8 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
-        getBusStationCache()
         initSearch()
+        getBusStationCache()
     }
 
     private fun initSearch() {
@@ -69,13 +68,13 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         }
     }
 
-    private fun sendSearchBusStationResult(busStations: BusStations) =
+    override fun sendSearchBusStationResult(busStations: BusStations) {
         (requireActivity() as? MainActivity)?.getBusStation { busStations }
+    }
 
     override fun showSearchBusStationResult(busStations: BusStations) {
         hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(busStations.busStations)
-        sendSearchBusStationResult(busStations)
     }
 
     override fun showSearchBusCache(busStations: BusStations) {
@@ -100,21 +99,6 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         progress_circular.visibility = View.GONE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_FAVORITE_ITEM) {
-            if (resultCode == Activity.RESULT_OK) {
-                data?.getStringExtra(KEY_RESULT_FAVORITE)?.let {
-                    findStationByArsId(it)
-                }
-
-            }
-        }
-    }
-
-    private fun findStationByArsId(arsId: String) {
-
-    }
-
     private val onClick: (BusStation) -> Unit = { item ->
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
@@ -130,7 +114,6 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     companion object {
         const val KEY_ITEM = "keyitem"
-        const val KEY_RESULT_FAVORITE = "result_favorite"
 
         const val REQUEST_FAVORITE_ITEM = 1
     }

@@ -15,6 +15,8 @@ interface BusStationContract : BaseContract {
         fun showErrorResultEmpty()
 
         fun showSearchBusCache(busStations: BusStations)
+
+        fun sendSearchBusStationResult(busStations: BusStations)
     }
 
     interface Presenter : BaseContract.Presenter {

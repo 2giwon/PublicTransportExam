@@ -23,6 +23,7 @@ class BusStationPresenter(
                         view.showErrorResultEmpty()
                     } else {
                         view.showSearchBusStationResult(it)
+                        view.sendSearchBusStationResult(it)
                     }
                 }, {
                     view.showErrorLoadBusStationFail()
