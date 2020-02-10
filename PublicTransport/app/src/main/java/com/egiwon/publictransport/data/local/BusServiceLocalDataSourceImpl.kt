@@ -1,17 +1,14 @@
 package com.egiwon.publictransport.data.local
 
 import com.egiwon.publictransport.data.local.model.BusStations
-import com.egiwon.publictransport.data.response.Item
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 class BusServiceLocalDataSourceImpl(
     private val dao: BusStationDao
 ) : BusServiceLocalDataSource {
-    override fun getBusStations(query: String): Single<List<Item>> =
+    override fun getBusStations(query: String): Single<BusStations> =
         dao.getBusStations(query)
-            .map { it.busStations }
-            .onErrorReturn { emptyList() }
             .toSingle()
             .subscribeOn(Schedulers.io())
 
@@ -20,10 +17,11 @@ class BusServiceLocalDataSourceImpl(
             .toSingle()
             .subscribeOn(Schedulers.io())
 
-    override fun insertBusStation(query: String, busStations: List<Item>) =
-        dao.insertBusStation(busStations.map {
-            BusStations(query, false, busStations, System.currentTimeMillis())
-        })
+    override fun insertBusStation(busStations: BusStations) =
+        dao.insertBusStation(busStations)
+
+    override fun deleteBusStation(busStations: BusStations) =
+        dao.deleteBusStations(busStations)
 
     companion object {
         private var instance: BusServiceLocalDataSource? = null

@@ -1,12 +1,13 @@
 package com.egiwon.publictransport.ui.busstation
 
 import com.egiwon.publictransport.base.BaseContract
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.Item
 
 interface BusStationContract : BaseContract {
 
     interface View : BaseContract.View {
-        fun showSearchBusStationResult(resultList: List<Item>)
+        fun showSearchBusStationResult(resultList: List<BusStation>)
 
         fun showErrorSearchNameEmpty()
 
@@ -14,7 +15,7 @@ interface BusStationContract : BaseContract {
 
         fun showErrorResultEmpty()
 
-        fun showSearchBusCache(resultList: List<Item>, searchQuery: String)
+        fun showSearchBusCache(resultList: List<BusStation>, searchQuery: String)
 
         fun sendFavoriteBusStation(station: Item)
     }
@@ -23,7 +24,5 @@ interface BusStationContract : BaseContract {
         fun requestBusStations()
 
         fun requestBusStations(stationName: String)
-
-        fun requestFindBusStationByArsId(arsId: String)
     }
 }

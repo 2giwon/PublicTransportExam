@@ -1,9 +1,6 @@
 package com.egiwon.publictransport.data.local
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.egiwon.publictransport.data.local.model.BusStations
 import io.reactivex.Maybe
 
@@ -17,6 +14,8 @@ interface BusStationDao {
     fun getBusStationsCache(): Maybe<BusStations>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBusStation(busStations: List<BusStations>)
+    fun insertBusStation(busStations: BusStations)
 
+    @Delete
+    fun deleteBusStations(busStations: BusStations)
 }

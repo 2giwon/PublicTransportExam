@@ -12,6 +12,7 @@ import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
 import com.egiwon.publictransport.data.local.BusStationDatabase
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ext.hideKeyboard
@@ -62,12 +63,12 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         }
     }
 
-    override fun showSearchBusStationResult(resultList: List<Item>) {
+    override fun showSearchBusStationResult(resultList: List<BusStation>) {
         hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(resultList)
     }
 
-    override fun showSearchBusCache(resultList: List<Item>, searchQuery: String) {
+    override fun showSearchBusCache(resultList: List<BusStation>, searchQuery: String) {
         showSearchBusStationResult(resultList)
         et_search.setText(searchQuery)
     }
@@ -106,11 +107,16 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         }
     }
 
-    private fun findStationByArsId(arsId: String) {
-        presenter.requestFindBusStationByArsId(arsId)
+    override fun onDestroy() {
+        super.onDestroy()
+        showToast("onDestroy")
     }
 
-    private val onClick: (Item) -> Unit = { item ->
+    private fun findStationByArsId(arsId: String) {
+
+    }
+
+    private val onClick: (BusStation) -> Unit = { item ->
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, item.arsId)
