@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.egiwon.publictransport.MainActivity
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
@@ -43,12 +42,14 @@ class FavoriteFragment
 
     }
 
-    override fun getFavoriteStationList() {
+    override fun showFavoriteStationList(favoriteBusStations: List<BusStation>) {
         (rv_favorite_station.adapter as? FavoriteAdapter)?.run {
-            (requireActivity() as? MainActivity)?.requestFavoriteList {
-                setItems(it)
-            }
+            setItems(favoriteBusStations)
         }
+    }
+
+    override fun errorFavoriteStationsLoadFail() {
+        showToast(getString(R.string.error_favorite_load_fail))
     }
 
     private val onClick: (BusStation) -> Unit = {
