@@ -6,7 +6,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.egiwon.publictransport.base.BaseActivity
-import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.data.local.model.BusStation
+import com.egiwon.publictransport.data.local.model.BusStations
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,8 +32,15 @@ class MainActivity :
         nav_view.setupWithNavController(navController)
     }
 
-    fun requestFavoriteItemToSend(block: (BehaviorSubject<Item>) -> Unit) =
+    fun requestFavoriteItemToSend(block: (BehaviorSubject<BusStation>) -> Unit) =
         mainPresenter.requestFavoriteSubject(block)
 
-    fun requestFavoriteList(block: (List<Item>) -> Unit) = mainPresenter.requestFavoriteList(block)
+    fun requestFavoriteList(block: (List<BusStation>) -> Unit) =
+        mainPresenter.requestFavoriteList(block)
+
+    fun getBusStation(block: () -> BusStations) =
+        mainPresenter.getSearchBusStationResult(block)
+
+    fun requestRecentlySearchBusStation(block: (BusStations) -> Unit) =
+        mainPresenter.requestBusStationCache(block)
 }

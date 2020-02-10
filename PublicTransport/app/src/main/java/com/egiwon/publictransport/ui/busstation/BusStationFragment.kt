@@ -13,8 +13,8 @@ import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
 import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.local.model.BusStation
+import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
-import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ext.hideKeyboard
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import kotlinx.android.synthetic.main.fragment_busstation.*
@@ -47,7 +47,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
-        presenter.requestBusStations()
+        getBusStationCache()
         initSearch()
     }
 
@@ -63,14 +63,24 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         }
     }
 
-    override fun showSearchBusStationResult(resultList: List<BusStation>) {
-        hideEmptyBus()
-        (rv_station.adapter as? BusStationAdapter)?.setItems(resultList)
+    private fun getBusStationCache() {
+        (requireActivity() as? MainActivity)?.requestRecentlySearchBusStation {
+            showSearchBusCache(it)
+        }
     }
 
-    override fun showSearchBusCache(resultList: List<BusStation>, searchQuery: String) {
-        showSearchBusStationResult(resultList)
-        et_search.setText(searchQuery)
+    private fun sendSearchBusStationResult(busStations: BusStations) =
+        (requireActivity() as? MainActivity)?.getBusStation { busStations }
+
+    override fun showSearchBusStationResult(busStations: BusStations) {
+        hideEmptyBus()
+        (rv_station.adapter as? BusStationAdapter)?.setItems(busStations.busStations)
+        sendSearchBusStationResult(busStations)
+    }
+
+    override fun showSearchBusCache(busStations: BusStations) {
+        showSearchBusStationResult(busStations)
+        et_search.setText(busStations.stationName)
     }
 
     override fun showErrorSearchNameEmpty() =
@@ -82,7 +92,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
 
-    override fun sendFavoriteBusStation(station: Item) {
+    override fun sendFavoriteBusStation(station: BusStation) {
         (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
             it.onNext(station)
         }
@@ -105,11 +115,6 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        showToast("onDestroy")
     }
 
     private fun findStationByArsId(arsId: String) {

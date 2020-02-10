@@ -1,6 +1,8 @@
 package com.egiwon.publictransport
 
 import com.egiwon.publictransport.base.BasePresenter
+import com.egiwon.publictransport.data.local.model.BusStation
+import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -10,10 +12,13 @@ class MainPresenter(
     private val view: MainContract.View
 ) : BasePresenter<Item>(), MainContract.Presenter {
 
-    private val favoriteSet = mutableSetOf<Item>()
+    private val favoriteSet = mutableSetOf<BusStation>()
+    private val busStationSet = mutableSetOf<BusStation>()
+    private var lastSearchQuery = ""
+    private var lastUpdateTime = 0L
 
-    private val _favoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
-    private val favoriteSubject: BehaviorSubject<Item> get() = _favoriteSubject
+    private val _favoriteSubject: BehaviorSubject<BusStation> = BehaviorSubject.create()
+    private val favoriteSubject: BehaviorSubject<BusStation> get() = _favoriteSubject
 
     init {
         _favoriteSubject.subscribeOn(Schedulers.single())
@@ -23,13 +28,24 @@ class MainPresenter(
             }.addDisposable()
     }
 
-    override fun requestFavoriteSubject(block: (BehaviorSubject<Item>) -> Unit) {
+    override fun requestFavoriteSubject(block: (BehaviorSubject<BusStation>) -> Unit) {
         block(favoriteSubject)
     }
 
-    override fun requestFavoriteList(block: (List<Item>) -> Unit) {
+    override fun requestFavoriteList(block: (List<BusStation>) -> Unit) {
         block(favoriteSet.toList())
     }
 
+    override fun requestBusStationCache(block: (BusStations) -> Unit) {
+        block(BusStations(lastSearchQuery, busStationSet.toList(), lastUpdateTime))
+    }
+
+    override fun getSearchBusStationResult(block: () -> BusStations) {
+        block().run {
+            busStationSet.addAll(busStations)
+            lastSearchQuery = stationName
+            lastUpdateTime = time
+        }
+    }
 
 }

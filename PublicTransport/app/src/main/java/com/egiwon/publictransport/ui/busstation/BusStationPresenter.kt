@@ -10,16 +10,6 @@ class BusStationPresenter(
     private val repository: BusServiceRepository
 ) : BasePresenter<Item>(), BusStationContract.Presenter {
 
-    override fun requestBusStations() {
-        repository.getStationCache()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                view.showSearchBusCache(it.busStations, it.stationName)
-            }, {
-
-            }).addDisposable()
-    }
-
     override fun requestBusStations(stationName: String) {
         if (stationName.isBlank()) {
             view.showErrorSearchNameEmpty()
@@ -29,7 +19,7 @@ class BusStationPresenter(
                 .doOnSubscribe { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
                 .subscribe({
-                    if (it.isNullOrEmpty()) {
+                    if (it.busStations.isNullOrEmpty()) {
                         view.showErrorResultEmpty()
                     } else {
                         view.showSearchBusStationResult(it)
