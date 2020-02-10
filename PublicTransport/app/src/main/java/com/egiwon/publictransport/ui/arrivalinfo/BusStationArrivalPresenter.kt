@@ -30,7 +30,11 @@ class BusStationArrivalPresenter(
             arrivalInfoList.find {
                 arsId == it.arsId
             }?.let {
-                view.showResultAddFavoriteBusStation(it)
+                repository.addFavoriteBusStation(it.arsId, it.stNm)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        view.showResultAddFavoriteBusStation(it)
+                    }
             }
         }
     }
