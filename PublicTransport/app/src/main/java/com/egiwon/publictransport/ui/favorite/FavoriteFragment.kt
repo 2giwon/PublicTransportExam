@@ -10,8 +10,8 @@ import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
 import com.egiwon.publictransport.data.local.BusStationDatabase
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
-import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
 import kotlinx.android.synthetic.main.fragment_favorite.*
@@ -51,7 +51,7 @@ class FavoriteFragment
         }
     }
 
-    private val onClick: (Item) -> Unit = {
+    private val onClick: (BusStation) -> Unit = {
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, it.arsId)
