@@ -3,17 +3,16 @@ package com.egiwon.publictransport
 import com.egiwon.publictransport.base.BasePresenter
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.local.model.BusStations
-import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 
 class MainPresenter(
     private val view: MainContract.View
-) : BasePresenter<Item>(), MainContract.Presenter {
+) : BasePresenter<BusStation>(), MainContract.Presenter {
 
     private val favoriteSet = mutableSetOf<BusStation>()
-    private val busStationSet = mutableSetOf<BusStation>()
+    private val busStationList = mutableListOf<BusStation>()
     private var lastSearchQuery = ""
     private var lastUpdateTime = 0L
 
@@ -37,12 +36,12 @@ class MainPresenter(
     }
 
     override fun requestBusStationCache(block: (BusStations) -> Unit) {
-        block(BusStations(lastSearchQuery, busStationSet.toList(), lastUpdateTime))
+        block(BusStations(lastSearchQuery, busStationList, lastUpdateTime))
     }
 
     override fun getSearchBusStationResult(block: () -> BusStations) {
         block().run {
-            busStationSet.addAll(busStations)
+            busStationList.setItems(busStations)
             lastSearchQuery = stationName
             lastUpdateTime = time
         }
