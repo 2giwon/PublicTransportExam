@@ -38,4 +38,18 @@ class BusStationArrivalPresenter(
             }
         }
     }
+
+    override fun checkFavoriteBusStation(arsId: String) {
+        repository.getFavoriteBusStations()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { busStation ->
+                    if (busStation.arsId == arsId) {
+                        view.hideFavoriteButton()
+                    }
+                }
+            }, {
+                view.showLoadFail(it)
+            }).addDisposable()
+    }
 }

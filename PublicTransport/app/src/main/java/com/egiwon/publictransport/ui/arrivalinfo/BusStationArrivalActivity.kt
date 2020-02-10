@@ -45,6 +45,8 @@ class BusStationArrivalActivity(
             swipe_container.setOnRefreshListener {
                 mainPresenter.getBusStationArrivalInfo(arsId)
             }
+
+            mainPresenter.checkFavoriteBusStation(arsId)
         }
 
     }
