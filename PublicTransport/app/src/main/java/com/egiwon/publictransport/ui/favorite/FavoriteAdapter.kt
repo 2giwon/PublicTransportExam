@@ -21,7 +21,7 @@ class FavoriteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStationViewHolder =
         FavoriteStationViewHolder(parent = parent).apply {
-            itemView.setOnClickListener {
+            itemView.layout_fv_bus_station.setOnClickListener {
                 onClick(favoriteStationList[adapterPosition])
             }
 
