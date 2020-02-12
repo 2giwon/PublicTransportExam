@@ -10,37 +10,28 @@ class BusStationPresenter(
     private val repository: BusServiceRepository
 ) : BasePresenter<Item>(), BusStationContract.Presenter {
 
-    private val stationList = mutableListOf<Item>()
-
     override fun requestBusStations(stationName: String) {
         if (stationName.isBlank()) {
             view.showErrorSearchNameEmpty()
         } else {
             repository.getStationInfo(stationName = stationName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess { view.showLoading() }
+                .doOnSubscribe { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
                 .subscribe({
-                    if (it.isNullOrEmpty()) {
+                    if (it.busStations.isNullOrEmpty()) {
                         view.showErrorResultEmpty()
                     } else {
-                        stationList.setItems(it)
-                        view.showSearchBusStationResult(stationList)
+                        view.showSearchBusStationResult(it)
+                        view.sendSearchBusStationResult(it)
                     }
-                }, { view.showErrorLoadBusStationFail() })
+                }, {
+                    view.showErrorLoadBusStationFail()
+                })
                 .addDisposable()
         }
 
     }
 
-    override fun requestFindBusStationByArsId(arsId: String) {
-        if (stationList.isNotEmpty()) {
-            stationList.find {
-                arsId == it.arsId
-            }?.let {
-                view.sendFavouriteBusStation(it)
-            }
-        }
-    }
 
 }

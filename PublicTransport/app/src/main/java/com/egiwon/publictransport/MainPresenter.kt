@@ -1,35 +1,25 @@
 package com.egiwon.publictransport
 
 import com.egiwon.publictransport.base.BasePresenter
-import com.egiwon.publictransport.data.response.Item
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import com.egiwon.publictransport.data.local.model.BusStation
+import com.egiwon.publictransport.data.local.model.BusStations
 
 class MainPresenter(
     private val view: MainContract.View
-) : BasePresenter<Item>(), MainContract.Presenter {
+) : BasePresenter<BusStation>(), MainContract.Presenter {
 
-    private val favouriteSet = mutableSetOf<Item>()
+    private val busStationList = mutableListOf<BusStation>()
+    private var lastSearchQuery = ""
 
-    private val _favoriteSubject: BehaviorSubject<Item> = BehaviorSubject.create()
-    private val favoriteSubject: BehaviorSubject<Item> get() = _favoriteSubject
-
-    init {
-        _favoriteSubject.subscribeOn(Schedulers.single())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                favouriteSet.add(it)
-            }.addDisposable()
+    override fun requestBusStationCache(block: (BusStations) -> Unit) {
+        block(BusStations(lastSearchQuery, busStationList))
     }
 
-    override fun requestFavoriteSubject(block: (BehaviorSubject<Item>) -> Unit) {
-        block(favoriteSubject)
+    override fun getSearchBusStationResult(block: () -> BusStations) {
+        block().run {
+            busStationList.setItems(busStations)
+            lastSearchQuery = searchQuery
+        }
     }
-
-    override fun requestFavoriteList(block: (List<Item>) -> Unit) {
-        block(favouriteSet.toList())
-    }
-
 
 }

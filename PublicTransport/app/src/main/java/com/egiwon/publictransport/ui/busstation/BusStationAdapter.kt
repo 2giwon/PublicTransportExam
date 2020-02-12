@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
-import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.ext.toStationId
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
-class BusStationAdapter(private val onClick: (Item) -> Unit) :
+class BusStationAdapter(private val onClick: (BusStation) -> Unit) :
     RecyclerView.Adapter<BusStationAdapter.StationViewHolder>() {
 
-    private val stationList = ArrayList<Item>()
+    private val stationList = ArrayList<BusStation>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder =
         StationViewHolder(parent = parent).apply {
@@ -27,7 +27,7 @@ class BusStationAdapter(private val onClick: (Item) -> Unit) :
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) =
         holder.bind(stationList[position])
 
-    fun setItems(resultItems: List<Item>) {
+    fun setItems(resultItems: List<BusStation>) {
         stationList.clear()
         stationList.addAll(resultItems)
         notifyDataSetChanged()
@@ -40,11 +40,10 @@ class BusStationAdapter(private val onClick: (Item) -> Unit) :
     ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
     ) {
-        fun bind(item: Item) = itemView.bindItem(item)
+        fun bind(item: BusStation) = itemView.bindItem(item)
 
-        private fun View.bindItem(item: Item) {
-            tv_station_name.text = item.stNm
-            tv_station_id.text = item.stId
+        private fun View.bindItem(item: BusStation) {
+            tv_station_name.text = item.stationName
             tv_station_arsId.text = item.arsId.toStationId()
         }
 

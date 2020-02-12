@@ -6,39 +6,52 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
-import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.ext.toStationId
-import kotlinx.android.synthetic.main.rv_station_item.view.*
+import kotlinx.android.synthetic.main.rv_fv_station_item.view.*
+import kotlinx.android.synthetic.main.rv_station_item.view.tv_station_arsId
+import kotlinx.android.synthetic.main.rv_station_item.view.tv_station_name
 
-class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavouriteStationViewHolder>() {
+class FavoriteAdapter(
+    private val onClick: (BusStation) -> Unit,
+    private val onDeleteClick: (BusStation) -> Unit
+) : RecyclerView.Adapter<FavoriteAdapter.FavoriteStationViewHolder>() {
 
-    private val favouriteStationList = ArrayList<Item>()
+    private val favoriteStationList = ArrayList<BusStation>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteStationViewHolder =
-        FavouriteStationViewHolder(parent = parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStationViewHolder =
+        FavoriteStationViewHolder(parent = parent).apply {
+            itemView.layout_fv_bus_station.setOnClickListener {
+                onClick(favoriteStationList[adapterPosition])
+            }
 
-    override fun getItemCount(): Int = favouriteStationList.size
+            itemView.iv_delete_item.setOnClickListener {
+                onDeleteClick(favoriteStationList[adapterPosition])
+            }
+        }
 
-    override fun onBindViewHolder(holder: FavouriteStationViewHolder, position: Int) =
-        holder.bind(favouriteStationList[position])
+    override fun getItemCount(): Int = favoriteStationList.size
 
-    fun setItems(list: List<Item>) {
-        favouriteStationList.clear()
-        favouriteStationList.addAll(list)
+    override fun onBindViewHolder(holder: FavoriteStationViewHolder, position: Int) =
+        holder.bind(favoriteStationList[position])
+
+    fun setItems(list: List<BusStation>) {
+        favoriteStationList.clear()
+        favoriteStationList.addAll(list)
         notifyDataSetChanged()
     }
 
-    inner class FavouriteStationViewHolder(
+    inner class FavoriteStationViewHolder(
         @LayoutRes
         layoutRes: Int = R.layout.rv_fv_station_item,
         parent: ViewGroup
     ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
     ) {
-        fun bind(item: Item) = itemView.bindItem(item)
+        fun bind(item: BusStation) = itemView.bindItem(item)
 
-        private fun View.bindItem(item: Item) {
-            tv_station_name.text = item.stNm
+        private fun View.bindItem(item: BusStation) {
+            tv_station_name.text = item.stationName
             tv_station_arsId.text = item.arsId.toStationId()
         }
 

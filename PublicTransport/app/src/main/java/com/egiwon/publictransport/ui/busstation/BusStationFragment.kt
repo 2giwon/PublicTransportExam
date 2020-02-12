@@ -1,16 +1,20 @@
 package com.egiwon.publictransport.ui.busstation
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.egiwon.publictransport.MainActivity
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseFragment
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
-import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
-import com.egiwon.publictransport.data.response.Item
+import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
+import com.egiwon.publictransport.data.local.BusStationDatabase
+import com.egiwon.publictransport.data.local.model.BusStation
+import com.egiwon.publictransport.data.local.model.BusStations
+import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
+import com.egiwon.publictransport.ext.hideKeyboard
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import kotlinx.android.synthetic.main.fragment_busstation.*
 
@@ -20,7 +24,12 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override val presenter: BusStationPresenter by lazy {
         BusStationPresenter(
             this,
-            BusServiceRepositoryImpl.getInstance(BusServiceRemoteDataSource.getInstance())
+            BusServiceRepositoryImpl.getInstance(
+                BusServiceRemoteDataSourceImpl.getInstance(),
+                BusServiceLocalDataSourceImpl.getInstance(
+                    BusStationDatabase.getInstance(requireContext()).busStationDao()
+                )
+            )
         )
     }
 
@@ -37,11 +46,48 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+        initSearch()
+        getBusStationCache()
     }
 
-    override fun showSearchBusStationResult(resultList: List<Item>) {
+    private fun initSearch() {
+        et_search.setOnKeyListener { _, keyCode, event ->
+            when (event.action) {
+                KeyEvent.ACTION_UP -> {
+                    if (
+                        keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER ||
+                        keyCode == KeyEvent.KEYCODE_ENTER
+                    ) {
+                        presenter.requestBusStations(et_search.text.toString())
+                        requireContext().hideKeyboard()
+                        true
+                    } else {
+                        false
+                    }
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun getBusStationCache() {
+        (requireActivity() as? MainActivity)?.requestRecentlySearchBusStation {
+            showSearchBusCache(it)
+        }
+    }
+
+    override fun sendSearchBusStationResult(busStations: BusStations) {
+        (requireActivity() as? MainActivity)?.getBusStation { busStations }
+    }
+
+    override fun showSearchBusStationResult(busStations: BusStations) {
         hideEmptyBus()
-        (rv_station.adapter as? BusStationAdapter)?.setItems(resultList)
+        (rv_station.adapter as? BusStationAdapter)?.setItems(busStations.busStations)
+    }
+
+    override fun showSearchBusCache(busStations: BusStations) {
+        showSearchBusStationResult(busStations)
+        et_search.setText(busStations.searchQuery)
     }
 
     override fun showErrorSearchNameEmpty() =
@@ -53,12 +99,6 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showErrorResultEmpty() =
         showToast(R.string.empty_bus)
 
-    override fun sendFavouriteBusStation(station: Item) {
-        (requireActivity() as? MainActivity)?.requestFavoriteItemToSend {
-            it.onNext(station)
-        }
-    }
-
     override fun showLoading() {
         progress_circular.visibility = View.VISIBLE
     }
@@ -67,27 +107,12 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         progress_circular.visibility = View.GONE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_FAVOURITE_ITEM) {
-            if (resultCode == Activity.RESULT_OK) {
-                data?.getStringExtra(KEY_RESULT_FAVOURITE)?.let {
-                    findStationByArsId(it)
-                }
-
-            }
-        }
-    }
-
-    private fun findStationByArsId(arsId: String) {
-        presenter.requestFindBusStationByArsId(arsId)
-    }
-
-    private val onClick: (Item) -> Unit = { item ->
+    private val onClick: (BusStation) -> Unit = { item ->
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, item.arsId)
         }
-        startActivityForResult(intent, REQUEST_FAVOURITE_ITEM)
+        startActivityForResult(intent, REQUEST_FAVORITE_ITEM)
     }
 
     private fun hideEmptyBus() {
@@ -97,9 +122,8 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     companion object {
         const val KEY_ITEM = "keyitem"
-        const val KEY_RESULT_FAVOURITE = "result_favourite"
 
-        const val REQUEST_FAVOURITE_ITEM = 1
+        const val REQUEST_FAVORITE_ITEM = 1
     }
 
 }

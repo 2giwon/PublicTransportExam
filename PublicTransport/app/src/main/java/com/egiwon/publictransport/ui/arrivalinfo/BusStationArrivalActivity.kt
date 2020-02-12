@@ -1,29 +1,31 @@
 package com.egiwon.publictransport.ui.arrivalinfo
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.base.BaseActivity
 import com.egiwon.publictransport.data.BusServiceRepositoryImpl
-import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
+import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
+import com.egiwon.publictransport.data.local.BusStationDatabase
+import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
-import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_RESULT_FAVOURITE
 import kotlinx.android.synthetic.main.activity_bus_arrival_info.*
 
 class BusStationArrivalActivity(
     @LayoutRes private val layoutResId: Int = R.layout.activity_bus_arrival_info
 ) : BaseActivity<BusStationArrivalPresenter>(layoutResId), BusStationArrivalContract.View {
 
-    private val returnIntent: Intent = Intent()
-
     override val mainPresenter: BusStationArrivalPresenter by lazy {
         BusStationArrivalPresenter(
             this,
-            BusServiceRepositoryImpl.getInstance(BusServiceRemoteDataSource.getInstance())
+            BusServiceRepositoryImpl.getInstance(
+                BusServiceRemoteDataSourceImpl.getInstance(),
+                BusServiceLocalDataSourceImpl.getInstance(
+                    BusStationDatabase.getInstance(applicationContext).busStationDao()
+                )
+            )
         )
     }
 
@@ -36,9 +38,15 @@ class BusStationArrivalActivity(
         intent.extras?.getString(KEY_ITEM)?.let { arsId ->
             mainPresenter.getBusStationArrivalInfo(arsId)
 
-            fb_favourite_bus.setOnClickListener {
-                addFavouriteBusStation(arsId)
+            fb_favorite_bus.setOnClickListener {
+                addFavoriteBusStation(arsId)
             }
+
+            swipe_container.setOnRefreshListener {
+                mainPresenter.getBusStationArrivalInfo(arsId)
+            }
+
+            mainPresenter.checkFavoriteBusStation(arsId)
         }
 
     }
@@ -49,22 +57,25 @@ class BusStationArrivalActivity(
 
     override fun showLoadFail(throwable: Throwable) = showToast(getString(R.string.error_load_fail))
 
-    override fun showResultAddFavouriteBusStation(station: ArrivalInfoItem) {
-        returnIntent.putExtra(KEY_RESULT_FAVOURITE, station.arsId)
-        showToast(getString(R.string.add_favourite_bus_station, station.stNm))
-        setResult(Activity.RESULT_OK, returnIntent)
+    override fun showResultAddFavoriteBusStation(station: ArrivalInfoItem) =
+        showToast(getString(R.string.add_favorite_bus_station, station.stNm))
+
+    override fun showFavoriteButton() {
+        fb_favorite_bus.visibility = View.VISIBLE
+    }
+
+    override fun hideFavoriteButton() {
+        fb_favorite_bus.visibility = View.GONE
     }
 
     override fun showLoading() {
-        progress_circular.visibility = View.VISIBLE
+        swipe_container.isRefreshing = true
     }
 
     override fun hideLoading() {
-        progress_circular.visibility = View.GONE
+        swipe_container.isRefreshing = false
     }
 
-    private fun addFavouriteBusStation(arsId: String) {
-        mainPresenter.addFavouriteBusStation(arsId)
-    }
-
+    private fun addFavoriteBusStation(arsId: String) =
+        mainPresenter.addFavoriteBusStation(arsId)
 }
