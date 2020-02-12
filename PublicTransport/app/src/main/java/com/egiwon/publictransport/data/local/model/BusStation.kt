@@ -7,4 +7,10 @@ import androidx.room.PrimaryKey
 data class BusStation(
     @PrimaryKey val arsId: String = "",
     val stationName: String = ""
-)
+) {
+
+    companion object {
+        fun empty(): BusStation = BusStation("", "")
+    }
+
+}
