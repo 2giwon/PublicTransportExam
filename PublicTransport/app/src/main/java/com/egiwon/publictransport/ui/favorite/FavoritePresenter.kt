@@ -11,20 +11,28 @@ class FavoritePresenter(
     private val repository: BusServiceRepository
 ) : FavoriteContract.Presenter, BasePresenter<Item>() {
 
+    private var deletedBusStation: BusStation = BusStation.empty()
+
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                view.showFavoriteStationList(list)
-            }.addDisposable()
+            .subscribe { list -> view.showFavoriteStationList(list) }
+            .addDisposable()
+    }
+
+    override fun restoreDeletedFavoriteStation() {
+        repository.addFavoriteBusStation(deletedBusStation)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { requestFavoriteStationList() }
+            .addDisposable()
     }
 
     override fun deleteFavoriteStation(busStation: BusStation) {
+        deletedBusStation = busStation
+
         repository.deleteFavoriteBusStation(busStation)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                view.refreshFavoriteAdapterList()
-            }
+            .subscribe { view.refreshFavoriteAdapterList() }
             .addDisposable()
     }
 

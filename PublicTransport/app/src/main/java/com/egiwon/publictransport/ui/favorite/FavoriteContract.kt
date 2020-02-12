@@ -16,6 +16,8 @@ interface FavoriteContract : BaseContract {
     interface Presenter : BaseContract.Presenter {
         fun requestFavoriteStationList()
 
+        fun restoreDeletedFavoriteStation()
+
         fun deleteFavoriteStation(busStation: BusStation)
     }
 }
