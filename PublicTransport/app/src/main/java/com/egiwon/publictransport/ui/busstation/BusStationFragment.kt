@@ -52,12 +52,20 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
 
     private fun initSearch() {
         et_search.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                presenter.requestBusStations(et_search.text.toString())
-                requireContext().hideKeyboard()
-                true
-            } else {
-                false
+            when (event.action) {
+                KeyEvent.ACTION_UP -> {
+                    if (
+                        keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER ||
+                        keyCode == KeyEvent.KEYCODE_ENTER
+                    ) {
+                        presenter.requestBusStations(et_search.text.toString())
+                        requireContext().hideKeyboard()
+                        true
+                    } else {
+                        false
+                    }
+                }
+                else -> false
             }
         }
     }
