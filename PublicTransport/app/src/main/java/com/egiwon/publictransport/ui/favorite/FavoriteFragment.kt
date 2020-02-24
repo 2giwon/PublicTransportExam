@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_favorite.*
 class FavoriteFragment
     : BaseFragment<FavoriteContract.Presenter>(R.layout.fragment_favorite), FavoriteContract.View {
 
-    private val onClick: (BusStation) -> Unit = {
+    private val onClick: onClickListener = {
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
             putExtra(KEY_ITEM, it.arsId)
@@ -28,10 +28,13 @@ class FavoriteFragment
         startActivity(intent)
     }
 
-    private val onDelete: (position: Int) -> Unit = {
+    private val onDelete: onDeleteListener = {
         (rv_favorite_station.adapter as? FavoriteAdapter)?.let { adapter ->
             val busStation = adapter.onGetItem(it)
-            presenter.deleteFavoriteStation(busStation)
+            adapter.onRemoveItem(it)
+
+            presenter.deleteFavoriteStationTemporarily(busStation, it)
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -74,17 +77,22 @@ class FavoriteFragment
     }
 
     override fun refreshFavoriteAdapterList() {
+        var undoClicked = false
         Snackbar.make(
             rv_favorite_station,
             getString(R.string.notify_delete_favorite_bus_station),
             Snackbar.LENGTH_LONG
-        ).setAction(
-            getString(R.string.cancel)
-        ) {
+        ).setAction(getString(R.string.cancel)) {
             presenter.restoreDeletedFavoriteStation()
-        }.show()
-
-        presenter.requestFavoriteStationList()
+            undoClicked = true
+        }.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                if (!undoClicked) {
+                    presenter.deleteFavoriteStationPermanently()
+                }
+            }
+        }).show()
     }
 
 

@@ -13,6 +13,8 @@ class FavoritePresenter(
 
     private var deletedBusStation: BusStation = BusStation.empty()
 
+    private var deletedBusPosition: Int = 0
+
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
@@ -21,19 +23,22 @@ class FavoritePresenter(
     }
 
     override fun restoreDeletedFavoriteStation() {
-        repository.addFavoriteBusStation(deletedBusStation)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { requestFavoriteStationList() }
-            .addDisposable()
+        requestFavoriteStationList()
     }
 
-    override fun deleteFavoriteStation(busStation: BusStation) {
+    override fun deleteFavoriteStationTemporarily(busStation: BusStation, position: Int) {
         deletedBusStation = busStation
+        deletedBusPosition = position
 
-        repository.deleteFavoriteBusStation(busStation)
+        view.refreshFavoriteAdapterList()
+    }
+
+    override fun deleteFavoriteStationPermanently() {
+        repository.deleteFavoriteBusStation(deletedBusStation)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { view.refreshFavoriteAdapterList() }
+            .subscribe()
             .addDisposable()
     }
+
 
 }
