@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 
+typealias onDeleteListener = (position: Int) -> Unit
+
 class SwipeToDeleteCallback(
-    private val onDelete: (position: Int) -> Unit,
+    private val onDelete: onDeleteListener,
     dragDirs: Int,
     swipeDirs: Int
 ) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {

@@ -10,13 +10,19 @@ import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.ext.toStationId
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 
+typealias onGetItemListener = (position: Int) -> BusStation
+typealias onClickListener = (BusStation) -> Unit
+typealias onRemoveItemListener = (position: Int) -> Unit
+
 class FavoriteAdapter(
-    private val onClick: (BusStation) -> Unit
+    private val onClick: onClickListener
 ) : RecyclerView.Adapter<FavoriteAdapter.FavoriteStationViewHolder>() {
 
     private val favoriteStationList = mutableListOf<BusStation>()
 
-    val onGetItem: (position: Int) -> BusStation = { favoriteStationList[it] }
+    val onGetItem: onGetItemListener = { favoriteStationList[it] }
+
+    val onRemoveItem: onRemoveItemListener = { favoriteStationList.removeAt(it) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStationViewHolder =
         FavoriteStationViewHolder(parent = parent).apply {
