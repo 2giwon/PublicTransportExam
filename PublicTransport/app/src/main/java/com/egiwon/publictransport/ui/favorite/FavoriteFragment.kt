@@ -28,7 +28,7 @@ class FavoriteFragment
         startActivity(intent)
     }
 
-    private val onDelete: onDeleteListener = {
+    private val onDelete: onRemoveItemListener = {
         (rv_favorite_station.adapter as? FavoriteAdapter)?.let { adapter ->
             val busStation = adapter.onGetItem(it)
             adapter.onRemoveItem(it)
@@ -36,6 +36,10 @@ class FavoriteFragment
             presenter.deleteFavoriteStationTemporarily(busStation, it)
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private val onMovedItemListener: onMovedItemListener = {
+        presenter.updateFavoriteStationList(it)
     }
 
     override val presenter: FavoriteContract.Presenter by lazy {
@@ -54,16 +58,21 @@ class FavoriteFragment
         super.onViewCreated(view, savedInstanceState)
 
         with(rv_favorite_station) {
-            adapter = FavoriteAdapter(onClick)
+            adapter = FavoriteAdapter(onClick, onMovedItemListener)
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             presenter.requestFavoriteStationList()
         }
 
-        ItemTouchHelper(SwipeToDeleteCallback(onDelete, 0, ItemTouchHelper.LEFT)).apply {
+        ItemTouchHelper(
+            SwipeToDeleteCallback(
+                onDelete,
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT
+            )
+        ).apply {
             attachToRecyclerView(rv_favorite_station)
         }
-
     }
 
     override fun showFavoriteStationList(favoriteBusStations: List<BusStation>) {

@@ -37,6 +37,9 @@ class BusServiceRepositoryImpl(
     override fun getFavoriteBusStations(): Single<List<BusStation>> =
         localDataSource.getFavoriteBusStation()
 
+    override fun updateFavoriteBusStations(busStations: List<BusStation>): Completable =
+        localDataSource.updateFavoriteBusStations(busStations)
+
     companion object {
         private var instance: BusServiceRepositoryImpl? = null
 

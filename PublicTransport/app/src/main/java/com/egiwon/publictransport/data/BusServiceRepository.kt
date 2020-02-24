@@ -16,4 +16,6 @@ interface BusServiceRepository {
     fun deleteFavoriteBusStation(busStation: BusStation): Completable
 
     fun getFavoriteBusStations(): Single<List<BusStation>>
+
+    fun updateFavoriteBusStations(busStations: List<BusStation>): Completable
 }

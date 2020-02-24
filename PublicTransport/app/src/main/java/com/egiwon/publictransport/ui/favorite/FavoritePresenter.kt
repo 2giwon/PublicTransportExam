@@ -5,6 +5,8 @@ import com.egiwon.publictransport.data.BusServiceRepository
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class FavoritePresenter(
     private val view: FavoriteContract.View,
@@ -14,6 +16,26 @@ class FavoritePresenter(
     private var deletedBusStation: BusStation = BusStation.empty()
 
     private var deletedBusPosition: Int = 0
+
+    private val updateFavoriteListSubject = PublishSubject.create<List<BusStation>>()
+
+    init {
+        updateFavoriteListSubject
+            .debounce(1L, TimeUnit.SECONDS)
+            .subscribe {
+                updateFavoriteBusStations(it)
+            }.addDisposable()
+    }
+
+    private fun updateFavoriteBusStations(busStations: List<BusStation>) =
+        repository.updateFavoriteBusStations(busStations)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+            }, {
+                view.errorFavoriteStationsLoadFail()
+            })
+            .addDisposable()
 
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
@@ -40,5 +62,8 @@ class FavoritePresenter(
             .addDisposable()
     }
 
+    override fun updateFavoriteStationList(busStations: List<BusStation>) {
+        updateFavoriteListSubject.onNext(busStations)
+    }
 
 }
