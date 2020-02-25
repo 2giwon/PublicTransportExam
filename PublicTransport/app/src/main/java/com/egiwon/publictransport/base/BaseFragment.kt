@@ -19,4 +19,7 @@ abstract class BaseFragment<P : BaseContract.Presenter>(
 
     override fun showToast(text: String) =
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+
+    override fun showLoading() = Unit
+    override fun hideLoading() = Unit
 }

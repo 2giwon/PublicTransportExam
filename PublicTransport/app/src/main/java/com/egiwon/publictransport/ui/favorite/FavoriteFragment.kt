@@ -104,7 +104,4 @@ class FavoriteFragment
         }).show()
     }
 
-
-    override fun showLoading() = Unit
-    override fun hideLoading() = Unit
 }
