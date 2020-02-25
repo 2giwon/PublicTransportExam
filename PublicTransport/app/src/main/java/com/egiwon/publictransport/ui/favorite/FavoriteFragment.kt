@@ -42,6 +42,11 @@ class FavoriteFragment
         presenter.updateFavoriteStationList(it)
     }
 
+    private val onCheckedTagListener: onCheckedTagListener =
+        { listPosition: Int, tagPosition: Int ->
+            presenter.requestBusStationTag(listPosition, tagPosition)
+        }
+
     override val presenter: FavoriteContract.Presenter by lazy {
         FavoritePresenter(
             this,
@@ -58,7 +63,7 @@ class FavoriteFragment
         super.onViewCreated(view, savedInstanceState)
 
         with(rv_favorite_station) {
-            adapter = FavoriteAdapter(onClick, onMovedItemListener)
+            adapter = FavoriteAdapter(onClick, onMovedItemListener, onCheckedTagListener)
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             presenter.requestFavoriteStationList()

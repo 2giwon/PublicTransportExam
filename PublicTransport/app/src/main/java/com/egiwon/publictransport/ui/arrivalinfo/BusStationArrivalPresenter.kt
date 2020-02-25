@@ -31,7 +31,14 @@ class BusStationArrivalPresenter(
             arrivalInfoList.find {
                 arsId == it.arsId
             }?.let {
-                repository.addFavoriteBusStation(BusStation(it.arsId, it.stNm))
+                repository.addFavoriteBusStation(
+                    BusStation(
+                        it.arsId,
+                        it.stNm,
+                        -1,
+                        System.currentTimeMillis()
+                    )
+                )
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         view.showResultAddFavoriteBusStation(it)

@@ -22,19 +22,18 @@ class FavoritePresenter(
     init {
         updateFavoriteListSubject
             .debounce(1L, TimeUnit.SECONDS)
-            .subscribe {
-                updateFavoriteBusStations(it)
+            .subscribe { list ->
+                val newList = list.map {
+                    BusStation(it.arsId, it.stationName, it.tag, System.currentTimeMillis() + 1)
+                }
+                updateFavoriteBusStations(newList)
             }.addDisposable()
     }
 
     private fun updateFavoriteBusStations(busStations: List<BusStation>) =
         repository.updateFavoriteBusStations(busStations)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-            }, {
-                view.errorFavoriteStationsLoadFail()
-            })
+            .subscribe()
             .addDisposable()
 
     override fun requestFavoriteStationList() {
@@ -64,6 +63,32 @@ class FavoritePresenter(
 
     override fun updateFavoriteStationList(busStations: List<BusStation>) {
         updateFavoriteListSubject.onNext(busStations)
+    }
+
+    override fun requestBusStationTag(busStationIndex: Int, tagIndex: Int) {
+        repository.getFavoriteBusStations()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { list ->
+                val busStation = BusStation(
+                    arsId = list[busStationIndex].arsId,
+                    stationName = list[busStationIndex].stationName,
+                    tag = tagIndex,
+                    createTime = list[busStationIndex].createTime
+                )
+
+                val mutableList = list.toMutableList()
+                mutableList[busStationIndex] = busStation
+                setBusStationTag(mutableList[busStationIndex])
+            }
+            .addDisposable()
+
+    }
+
+    private fun setBusStationTag(busStation: BusStation) {
+        repository.saveBusStation(busStation)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+            .addDisposable()
     }
 
 }

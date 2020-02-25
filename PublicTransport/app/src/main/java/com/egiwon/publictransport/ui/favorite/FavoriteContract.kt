@@ -23,5 +23,7 @@ interface FavoriteContract : BaseContract {
         fun deleteFavoriteStationPermanently()
 
         fun updateFavoriteStationList(busStations: List<BusStation>)
+
+        fun requestBusStationTag(busStationIndex: Int, tagIndex: Int)
     }
 }
