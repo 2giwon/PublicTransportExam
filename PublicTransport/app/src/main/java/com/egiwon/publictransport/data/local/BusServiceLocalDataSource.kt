@@ -5,6 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface BusServiceLocalDataSource {
+
     fun getFavoriteBusStation(): Single<List<BusStation>>
 
     fun insertBusStation(busStation: BusStation): Completable
@@ -12,4 +13,6 @@ interface BusServiceLocalDataSource {
     fun deleteBusStation(busStation: BusStation): Completable
 
     fun updateFavoriteBusStations(busStations: List<BusStation>): Completable
+
+    fun getLastBusStationIndex(): Single<Int>
 }

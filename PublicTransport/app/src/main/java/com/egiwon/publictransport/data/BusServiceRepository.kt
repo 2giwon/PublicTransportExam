@@ -20,4 +20,6 @@ interface BusServiceRepository {
     fun updateFavoriteBusStations(busStations: List<BusStation>): Completable
 
     fun saveBusStation(busStation: BusStation): Completable
+
+    fun getFavoriteBusStationLastIndex(): Single<Int>
 }

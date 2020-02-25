@@ -21,13 +21,8 @@ class BusServiceRepositoryImpl(
             .map { responseItems ->
                 BusStations(
                     stationName,
-                    responseItems.map {
-                        BusStation(
-                            it.arsId,
-                            it.stNm,
-                            -1,
-                            System.currentTimeMillis()
-                        )
+                    responseItems.mapIndexed { index, item ->
+                        BusStation(index, item.arsId, item.stNm, "")
                     }
                 )
             }
@@ -49,6 +44,9 @@ class BusServiceRepositoryImpl(
 
     override fun saveBusStation(busStation: BusStation): Completable =
         localDataSource.insertBusStation(busStation)
+
+    override fun getFavoriteBusStationLastIndex(): Single<Int> =
+        localDataSource.getLastBusStationIndex()
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null

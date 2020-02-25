@@ -19,16 +19,20 @@ class FavoritePresenter(
 
     private val updateFavoriteListSubject = PublishSubject.create<List<BusStation>>()
 
+    private var lastId = 0
+
     init {
         updateFavoriteListSubject
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe { list ->
-                val newList = list.map {
-                    BusStation(it.arsId, it.stationName, it.tag, System.currentTimeMillis() + 1)
-                }
-                updateFavoriteBusStations(newList)
+
+                //                updateFavoriteBusStations(newList)
             }.addDisposable()
     }
+
+//    private fun <T>List<T>.swapId(): List<T> {
+//        val idList = li
+//    }
 
     private fun updateFavoriteBusStations(busStations: List<BusStation>) =
         repository.updateFavoriteBusStations(busStations)
@@ -39,7 +43,10 @@ class FavoritePresenter(
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list -> view.showFavoriteStationList(list) }
+            .subscribe { list ->
+                view.showFavoriteStationList(list)
+                lastId = list.size
+            }
             .addDisposable()
     }
 
@@ -70,10 +77,10 @@ class FavoritePresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
                 val busStation = BusStation(
+                    id = list[busStationIndex].id,
                     arsId = list[busStationIndex].arsId,
                     stationName = list[busStationIndex].stationName,
-                    tag = tagIndex,
-                    createTime = list[busStationIndex].createTime
+                    tag = ""
                 )
 
                 val mutableList = list.toMutableList()

@@ -4,17 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.core.view.forEach
 import androidx.core.view.forEachIndexed
-import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.ext.toStationId
 import com.google.android.material.chip.ChipGroup
-import kotlinx.android.synthetic.main.rv_fv_station_item.view.*
-import kotlinx.android.synthetic.main.rv_station_item.view.tv_station_arsId
-import kotlinx.android.synthetic.main.rv_station_item.view.tv_station_name
+import kotlinx.android.synthetic.main.rv_station_item.view.*
 import java.util.*
 
 typealias onGetItemListener = (position: Int) -> BusStation
@@ -41,13 +37,6 @@ class FavoriteAdapter(
             itemView.setOnClickListener {
                 onClick(favoriteStationList[adapterPosition])
             }
-
-            (itemView.chipgroup_fv_items as ChipGroup).forEach {
-                it.setOnClickListener { view ->
-                    onCheckedTag(adapterPosition, itemView.chipgroup_fv_items.getCheckedItem(view))
-                }
-
-            }
         }
 
     override fun getItemCount(): Int = favoriteStationList.size
@@ -66,17 +55,13 @@ class FavoriteAdapter(
     }
 
     fun moveItems(from: Int, to: Int) {
-        if (from < to) {
-            for (i in from until to) {
-                Collections.swap(favoriteStationList, i, i + 1)
-            }
-        } else {
-            for (i in to until from) {
-                Collections.swap(favoriteStationList, i, i + 1)
-            }
-        }
+        Collections.swap(favoriteStationList, from, to)
         notifyItemMoved(from, to)
-        onMoved(favoriteStationList.toMutableList())
+        if (from > to) {
+            onMoved(favoriteStationList.subList(to, from + 1))
+        } else {
+            onMoved(favoriteStationList.subList(from, to + 1))
+        }
     }
 
     fun setItems(list: List<BusStation>) {
@@ -97,9 +82,6 @@ class FavoriteAdapter(
         private fun View.bindItem(item: BusStation) {
             tv_station_name.text = item.stationName
             tv_station_arsId.text = item.arsId.toStationId()
-            if (item.tag >= 0) {
-                chipgroup_fv_items.check(chipgroup_fv_items[item.tag].id)
-            }
         }
 
     }

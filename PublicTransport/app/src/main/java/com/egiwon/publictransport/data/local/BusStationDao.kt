@@ -8,7 +8,7 @@ import io.reactivex.Maybe
 @Dao
 interface BusStationDao {
 
-    @Query("SELECT * FROM busstations ORDER BY createTime ASC")
+    @Query("SELECT * FROM busstations ORDER BY id ASC")
     fun getFavoriteBusStations(): Maybe<List<BusStation>>
 
     @Query("DELETE FROM busstations")
