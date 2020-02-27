@@ -21,21 +21,34 @@ class BusServiceRepositoryImpl(
             .map { responseItems ->
                 BusStations(
                     stationName,
-                    responseItems.map { BusStation(it.arsId, it.stNm) }
+                    responseItems.map {
+                        BusStation(
+                            it.arsId,
+                            it.stNm,
+                            -1,
+                            System.currentTimeMillis()
+                        )
+                    }
                 )
             }
 
     override fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>> =
         remoteDataSource.getBusStationArrivalInfo(arsId)
 
-    override fun addFavoriteBusStation(arsId: String, stationName: String) =
-        localDataSource.insertBusStation(BusStation(arsId, stationName))
+    override fun addFavoriteBusStation(busStation: BusStation) =
+        localDataSource.insertBusStation(busStation)
 
     override fun deleteFavoriteBusStation(busStation: BusStation): Completable =
         localDataSource.deleteBusStation(busStation)
 
     override fun getFavoriteBusStations(): Single<List<BusStation>> =
         localDataSource.getFavoriteBusStation()
+
+    override fun updateFavoriteBusStations(busStations: List<BusStation>): Completable =
+        localDataSource.updateFavoriteBusStations(busStations)
+
+    override fun saveBusStation(busStation: BusStation): Completable =
+        localDataSource.insertBusStation(busStation)
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null

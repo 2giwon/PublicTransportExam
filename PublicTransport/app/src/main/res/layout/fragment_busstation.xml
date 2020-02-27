@@ -21,6 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/search_station_hint"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toStartOf="@id/iv_search"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintHorizontal_weight="8"
@@ -31,8 +32,8 @@
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text"
                 android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

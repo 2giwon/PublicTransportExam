@@ -10,4 +10,6 @@ interface BusServiceLocalDataSource {
     fun insertBusStation(busStation: BusStation): Completable
 
     fun deleteBusStation(busStation: BusStation): Completable
+
+    fun updateFavoriteBusStations(busStations: List<BusStation>): Completable
 }
