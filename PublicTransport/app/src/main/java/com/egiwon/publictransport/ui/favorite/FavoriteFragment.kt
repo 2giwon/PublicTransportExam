@@ -15,6 +15,7 @@ import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
 class FavoriteFragment
@@ -106,7 +107,8 @@ class FavoriteFragment
                     presenter.deleteFavoriteStationPermanently()
                 }
             }
-        }).show()
+        }).setAnchorView(requireActivity().nav_view)
+            .show()
     }
 
 }
