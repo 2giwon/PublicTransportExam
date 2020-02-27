@@ -11,6 +11,9 @@ interface BusStationDao {
     @Query("SELECT * FROM busstations ORDER BY id ASC")
     fun getFavoriteBusStations(): Maybe<List<BusStation>>
 
+    @Query("SELECT * FROM busstations WHERE id BETWEEN :from AND :to")
+    fun getFavoriteBusStationFromTo(from: Int, to: Int): Maybe<List<BusStation>>
+
     @Query("DELETE FROM busstations")
     fun deleteAll(): Completable
 

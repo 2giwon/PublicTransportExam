@@ -4,26 +4,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.core.view.forEachIndexed
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.ext.toStationId
-import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.rv_station_item.view.*
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 
 typealias onGetItemListener = (position: Int) -> BusStation
 typealias onClickListener = (BusStation) -> Unit
 typealias onRemoveItemListener = (position: Int) -> Unit
 typealias onMovedItemListener = (List<BusStation>) -> Unit
-typealias onCheckedTagListener = (adapterPosition: Int, chipsPosition: Int) -> Unit
-
 
 class FavoriteAdapter(
     private val onClick: onClickListener,
-    private val onMoved: onMovedItemListener,
-    private val onCheckedTag: onCheckedTagListener
+    private val onMoved: onMovedItemListener
 ) : RecyclerView.Adapter<FavoriteAdapter.FavoriteStationViewHolder>() {
 
     private val favoriteStationList = mutableListOf<BusStation>()
@@ -44,29 +41,23 @@ class FavoriteAdapter(
     override fun onBindViewHolder(holder: FavoriteStationViewHolder, position: Int) =
         holder.bind(favoriteStationList[position])
 
-    private fun ChipGroup.getCheckedItem(checkedView: View): Int {
-        forEachIndexed { index, view ->
-            if (view.id == checkedView.id) {
-                return index
-            }
-        }
-
-        return -1
-    }
-
     fun moveItems(from: Int, to: Int) {
         Collections.swap(favoriteStationList, from, to)
         notifyItemMoved(from, to)
-        if (from > to) {
-            onMoved(favoriteStationList.subList(to, from + 1))
-        } else {
-            onMoved(favoriteStationList.subList(from, to + 1))
-        }
+    }
+
+    fun onEndMovedItem(start: Int, end: Int) {
+        val subList = mutableListOf<BusStation>()
+        subList.addAll(favoriteStationList.subList(min(start, end), max(start, end)))
+        subList.add(favoriteStationList[max(start, end)])
+
+        onMoved(subList)
     }
 
     fun setItems(list: List<BusStation>) {
+        val sets = mutableSetOf<BusStation>().apply { addAll(list) }
         favoriteStationList.clear()
-        favoriteStationList.addAll(list)
+        favoriteStationList.addAll(sets)
         notifyDataSetChanged()
     }
 

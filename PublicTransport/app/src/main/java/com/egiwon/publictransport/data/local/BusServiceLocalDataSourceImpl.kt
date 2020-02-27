@@ -14,6 +14,11 @@ class BusServiceLocalDataSourceImpl(
             .toSingle()
             .subscribeOn(Schedulers.io())
 
+    override fun getFavoriteBusStationsFromTo(from: Int, to: Int): Single<List<BusStation>> =
+        dao.getFavoriteBusStationFromTo(from, to)
+            .toSingle()
+            .subscribeOn(Schedulers.io())
+
     override fun insertBusStation(busStation: BusStation): Completable =
         dao.insertBusStation(busStation)
             .subscribeOn(Schedulers.io())

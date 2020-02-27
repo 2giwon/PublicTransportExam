@@ -41,7 +41,8 @@ class BusStationArrivalPresenter(
     private fun addFavoriteBusStation(arrivalInfoItem: ArrivalInfoItem, id: Int) =
         repository.addFavoriteBusStation(
             BusStation(id, arrivalInfoItem.arsId, arrivalInfoItem.stNm, "")
-        ).observeOn(AndroidSchedulers.mainThread())
+        )
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 view.showResultAddFavoriteBusStation(arrivalInfoItem)
             }.addDisposable()

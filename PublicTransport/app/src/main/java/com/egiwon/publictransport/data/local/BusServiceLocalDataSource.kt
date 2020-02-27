@@ -8,6 +8,8 @@ interface BusServiceLocalDataSource {
 
     fun getFavoriteBusStation(): Single<List<BusStation>>
 
+    fun getFavoriteBusStationsFromTo(from: Int, to: Int): Single<List<BusStation>>
+
     fun insertBusStation(busStation: BusStation): Completable
 
     fun deleteBusStation(busStation: BusStation): Completable

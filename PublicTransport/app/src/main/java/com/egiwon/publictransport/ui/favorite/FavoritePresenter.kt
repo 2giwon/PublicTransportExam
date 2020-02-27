@@ -5,8 +5,6 @@ import com.egiwon.publictransport.data.BusServiceRepository
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.PublishSubject
-import java.util.concurrent.TimeUnit
 
 class FavoritePresenter(
     private val view: FavoriteContract.View,
@@ -17,28 +15,7 @@ class FavoritePresenter(
 
     private var deletedBusPosition: Int = 0
 
-    private val updateFavoriteListSubject = PublishSubject.create<List<BusStation>>()
-
     private var lastId = 0
-
-    init {
-        updateFavoriteListSubject
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe { list ->
-
-                //                updateFavoriteBusStations(newList)
-            }.addDisposable()
-    }
-
-//    private fun <T>List<T>.swapId(): List<T> {
-//        val idList = li
-//    }
-
-    private fun updateFavoriteBusStations(busStations: List<BusStation>) =
-        repository.updateFavoriteBusStations(busStations)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
-            .addDisposable()
 
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
@@ -68,9 +45,20 @@ class FavoritePresenter(
             .addDisposable()
     }
 
-    override fun updateFavoriteStationList(busStations: List<BusStation>) {
-        updateFavoriteListSubject.onNext(busStations)
+    override fun updateFavoriteStationListFromTo(subList: List<BusStation>) {
+        val mutableList = subList.toMutableList()
+        mutableList.sortBy { it.id }
+
+        val updateList = mutableList.mapIndexed { index, bus ->
+            BusStation(bus.id, subList[index].arsId, subList[index].stationName, subList[index].tag)
+        }
+
+        repository.updateFavoriteBusStations(updateList)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+            .addDisposable()
     }
+
 
     override fun requestBusStationTag(busStationIndex: Int, tagIndex: Int) {
         repository.getFavoriteBusStations()
