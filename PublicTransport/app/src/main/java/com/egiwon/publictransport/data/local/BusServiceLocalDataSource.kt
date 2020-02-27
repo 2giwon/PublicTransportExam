@@ -10,6 +10,8 @@ interface BusServiceLocalDataSource {
 
     fun getFavoriteBusStationsFromTo(from: Int, to: Int): Single<List<BusStation>>
 
+    fun getFavoriteBusStation(id: Int): Single<BusStation>
+
     fun insertBusStation(busStation: BusStation): Completable
 
     fun deleteBusStation(busStation: BusStation): Completable
@@ -17,4 +19,6 @@ interface BusServiceLocalDataSource {
     fun updateFavoriteBusStations(busStations: List<BusStation>): Completable
 
     fun getLastBusStationIndex(): Single<Int>
+
+    fun updateBusStation(busStation: BusStation): Completable
 }

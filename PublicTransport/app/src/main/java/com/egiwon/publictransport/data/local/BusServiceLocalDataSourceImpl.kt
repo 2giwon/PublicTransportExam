@@ -14,6 +14,11 @@ class BusServiceLocalDataSourceImpl(
             .toSingle()
             .subscribeOn(Schedulers.io())
 
+    override fun getFavoriteBusStation(id: Int): Single<BusStation> =
+        dao.getFavoriteBusStation(id)
+            .toSingle()
+            .subscribeOn(Schedulers.io())
+
     override fun getFavoriteBusStationsFromTo(from: Int, to: Int): Single<List<BusStation>> =
         dao.getFavoriteBusStationFromTo(from, to)
             .toSingle()
@@ -28,13 +33,17 @@ class BusServiceLocalDataSourceImpl(
             .subscribeOn(Schedulers.io())
 
     override fun updateFavoriteBusStations(busStations: List<BusStation>): Completable =
-        dao.insertBusStations(busStations)
+        dao.updateBusStations(busStations)
             .subscribeOn(Schedulers.io())
 
     override fun getLastBusStationIndex(): Single<Int> =
         dao.getFavoriteBusStations()
             .toSingle()
             .flatMap { Single.just(it.size) }
+            .subscribeOn(Schedulers.io())
+
+    override fun updateBusStation(busStation: BusStation): Completable =
+        dao.updateBusStation(busStation)
             .subscribeOn(Schedulers.io())
 
     companion object {

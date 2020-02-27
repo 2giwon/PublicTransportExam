@@ -17,4 +17,5 @@
     <string name="chip_mart">마트</string>
     <string name="chip_trip">여행</string>
     <string name="chip_etc">기타</string>
+    <string name="input_tag">태그를 입력해주세요</string>
 </resources>

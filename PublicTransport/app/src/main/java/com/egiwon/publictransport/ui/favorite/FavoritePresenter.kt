@@ -59,31 +59,21 @@ class FavoritePresenter(
             .addDisposable()
     }
 
-
-    override fun requestBusStationTag(busStationIndex: Int, tagIndex: Int) {
-        repository.getFavoriteBusStations()
+    override fun setFavoriteStationTag(id: Int, tag: String) {
+        repository.getFavoriteBusStation(id)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                val busStation = BusStation(
-                    id = list[busStationIndex].id,
-                    arsId = list[busStationIndex].arsId,
-                    stationName = list[busStationIndex].stationName,
-                    tag = ""
+            .subscribe({
+                saveFavoriteBusStation(
+                    BusStation(id, it.arsId, it.stationName, tag)
                 )
-
-                val mutableList = list.toMutableList()
-                mutableList[busStationIndex] = busStation
-                setBusStationTag(mutableList[busStationIndex])
-            }
+            }, {})
             .addDisposable()
-
     }
 
-    private fun setBusStationTag(busStation: BusStation) {
+    private fun saveFavoriteBusStation(busStation: BusStation) =
         repository.saveBusStation(busStation)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+            .subscribe { requestFavoriteStationList() }
             .addDisposable()
-    }
 
 }

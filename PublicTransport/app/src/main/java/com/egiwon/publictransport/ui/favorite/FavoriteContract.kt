@@ -24,6 +24,6 @@ interface FavoriteContract : BaseContract {
 
         fun updateFavoriteStationListFromTo(subList: List<BusStation>)
 
-        fun requestBusStationTag(busStationIndex: Int, tagIndex: Int)
+        fun setFavoriteStationTag(id: Int, tag: String)
     }
 }

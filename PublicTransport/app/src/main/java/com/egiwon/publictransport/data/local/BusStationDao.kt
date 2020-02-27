@@ -14,6 +14,9 @@ interface BusStationDao {
     @Query("SELECT * FROM busstations WHERE id BETWEEN :from AND :to")
     fun getFavoriteBusStationFromTo(from: Int, to: Int): Maybe<List<BusStation>>
 
+    @Query("SELECT * FROM busstations WHERE id = :id")
+    fun getFavoriteBusStation(id: Int): Maybe<BusStation>
+
     @Query("DELETE FROM busstations")
     fun deleteAll(): Completable
 
@@ -22,6 +25,12 @@ interface BusStationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBusStation(busStation: BusStation): Completable
+
+    @Update
+    fun updateBusStation(busStation: BusStation): Completable
+
+    @Update
+    fun updateBusStations(busStations: List<BusStation>): Completable
 
     @Delete
     fun deleteBusStations(busStation: BusStation): Completable

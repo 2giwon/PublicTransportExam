@@ -3,22 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <View
+        android:id="@+id/bar"
         android:layout_width="10dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_margin="4dp"
         android:background="@android:color/holo_orange_dark"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintStart_toEndOf="@id/bar"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_station_name"
@@ -45,6 +47,48 @@
             app:layout_constraintTop_toBottomOf="@id/tv_station_name"
             tools:text="12-345" />
 
+        <TextView
+            android:id="@+id/tv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:singleLine="true"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_station_arsId"
+            tools:text="#출근" />
+
+        <ImageView
+            android:id="@+id/iv_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:rotationX="0"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_station_name" />
+
+        <EditText
+            android:id="@+id/et_tag"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="false"
+            android:hint="@string/input_tag"
+            android:inputType="text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/iv_confirm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_tag" />
+
+        <ImageView
+            android:id="@+id/iv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_fill_star_24px"
+            app:layout_constraintBottom_toBottomOf="@id/et_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_tag" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

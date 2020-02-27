@@ -27,6 +27,9 @@ class BusServiceRepositoryImpl(
     override fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>> =
         remoteDataSource.getBusStationArrivalInfo(arsId)
 
+    override fun getFavoriteBusStation(id: Int): Single<BusStation> =
+        localDataSource.getFavoriteBusStation(id)
+
     override fun addFavoriteBusStation(busStation: BusStation) =
         localDataSource.insertBusStation(busStation)
 
@@ -43,7 +46,7 @@ class BusServiceRepositoryImpl(
         localDataSource.updateFavoriteBusStations(busStations)
 
     override fun saveBusStation(busStation: BusStation): Completable =
-        localDataSource.insertBusStation(busStation)
+        localDataSource.updateBusStation(busStation)
 
     override fun getFavoriteBusStationLastIndex(): Single<Int> =
         localDataSource.getLastBusStationIndex()

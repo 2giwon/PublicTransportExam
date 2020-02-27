@@ -55,11 +55,15 @@ class FavoriteFragment
         presenter.updateFavoriteStationListFromTo(list)
     }
 
+    private val onClickTagListener: onClickTagListener = { id, tag ->
+        presenter.setFavoriteStationTag(id, tag)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(rv_favorite_station) {
-            adapter = FavoriteAdapter(onClick, onMovedItemListener)
+            adapter = FavoriteAdapter(onClick, onMovedItemListener, onClickTagListener)
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             presenter.requestFavoriteStationList()
