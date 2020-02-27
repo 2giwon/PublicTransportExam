@@ -2,6 +2,7 @@ package com.egiwon.publictransport.ui.arrivalinfo
 
 import com.egiwon.publictransport.base.BasePresenter
 import com.egiwon.publictransport.data.BusServiceRepository
+import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -30,7 +31,14 @@ class BusStationArrivalPresenter(
             arrivalInfoList.find {
                 arsId == it.arsId
             }?.let {
-                repository.addFavoriteBusStation(it.arsId, it.stNm)
+                repository.addFavoriteBusStation(
+                    BusStation(
+                        it.arsId,
+                        it.stNm,
+                        -1,
+                        System.currentTimeMillis()
+                    )
+                )
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         view.showResultAddFavoriteBusStation(it)

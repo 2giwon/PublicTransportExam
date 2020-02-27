@@ -22,6 +22,12 @@ class BusServiceLocalDataSourceImpl(
         dao.deleteBusStations(busStation)
             .subscribeOn(Schedulers.io())
 
+    override fun updateFavoriteBusStations(busStations: List<BusStation>): Completable =
+        Completable.concatArray(
+            dao.deleteAll(),
+            dao.insertBusStations(busStations)
+        ).subscribeOn(Schedulers.io())
+
     companion object {
         private var instance: BusServiceLocalDataSource? = null
 
