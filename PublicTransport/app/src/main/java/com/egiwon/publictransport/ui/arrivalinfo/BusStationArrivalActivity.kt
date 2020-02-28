@@ -9,8 +9,9 @@ import com.egiwon.publictransport.data.BusServiceRepositoryImpl
 import com.egiwon.publictransport.data.local.BusServiceLocalDataSourceImpl
 import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
-import com.egiwon.publictransport.data.response.ArrivalInfoItem
-import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
+import com.egiwon.publictransport.ui.arrivalinfo.vo.ArrivalViewObject
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM_ARSID
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM_TITLE
 import kotlinx.android.synthetic.main.activity_bus_arrival_info.*
 
 class BusStationArrivalActivity(
@@ -32,10 +33,11 @@ class BusStationArrivalActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        rv_arrival_bus.adapter = BusStationArrivalAdapter()
-        rv_arrival_bus.setHasFixedSize(true)
+        intent?.extras?.getString(KEY_ITEM_TITLE)?.let {
+            supportActionBar?.title = it
+        }
 
-        intent.extras?.getString(KEY_ITEM)?.let { arsId ->
+        intent.extras?.getString(KEY_ITEM_ARSID)?.let { arsId ->
             mainPresenter.getBusStationArrivalInfo(arsId)
 
             fb_favorite_bus.setOnClickListener {
@@ -49,16 +51,18 @@ class BusStationArrivalActivity(
             mainPresenter.checkFavoriteBusStation(arsId)
         }
 
+        rv_arrival_bus.adapter = BusStationArrivalAdapter()
+        rv_arrival_bus.setHasFixedSize(true)
     }
 
-    override fun showBusStationArrivalInfo(arrivalItems: List<ArrivalInfoItem>) {
+    override fun showBusStationArrivalInfo(arrivalItems: List<ArrivalViewObject>) {
         (rv_arrival_bus.adapter as? BusStationArrivalAdapter)?.setItems(arrivalItems)
     }
 
     override fun showLoadFail(throwable: Throwable) = showToast(getString(R.string.error_load_fail))
 
-    override fun showResultAddFavoriteBusStation(station: ArrivalInfoItem) =
-        showToast(getString(R.string.add_favorite_bus_station, station.stNm))
+    override fun showResultAddFavoriteBusStation(station: ArrivalViewObject) =
+        showToast(getString(R.string.add_favorite_bus_station, station.stationName))
 
     override fun showFavoriteButton() {
         fb_favorite_bus.visibility = View.VISIBLE
