@@ -5,6 +5,7 @@ import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSource
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import com.egiwon.publictransport.data.response.BusStationRouteInfoItem
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -50,6 +51,9 @@ class BusServiceRepositoryImpl(
 
     override fun getFavoriteBusStationLastIndex(): Single<Int> =
         localDataSource.getLastBusStationIndex()
+
+    override fun getBusRouteInfo(arsId: String): Single<List<BusStationRouteInfoItem>> =
+        remoteDataSource.getBusStationRouteInfo(arsId)
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null
