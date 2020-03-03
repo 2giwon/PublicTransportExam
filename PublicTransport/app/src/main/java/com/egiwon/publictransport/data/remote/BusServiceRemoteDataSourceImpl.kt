@@ -1,6 +1,7 @@
 package com.egiwon.publictransport.data.remote
 
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import com.egiwon.publictransport.data.response.BusStationRouteInfoItem
 import com.egiwon.publictransport.data.response.Item
 import com.egiwon.publictransport.data.service.StationSearchService
 import io.reactivex.Single
@@ -20,6 +21,13 @@ class BusServiceRemoteDataSourceImpl : BusServiceRemoteDataSource {
             serviceKey = SERVICE_KEY,
             stationId = arsId
         ).map { it.arrivalMsgBody?.itemList?.toList() ?: emptyList() }
+            .subscribeOn(Schedulers.io())
+
+    override fun getBusStationRouteInfo(arsId: String): Single<List<BusStationRouteInfoItem>> =
+        StationSearchService.retrofit.getRouteByStation(
+            serviceKey = SERVICE_KEY,
+            stationId = arsId
+        ).map { it.routeInfoMsgBody?.itemList?.toList() ?: emptyList() }
             .subscribeOn(Schedulers.io())
 
     companion object {

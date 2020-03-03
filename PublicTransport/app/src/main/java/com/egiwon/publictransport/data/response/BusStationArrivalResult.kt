@@ -1,5 +1,6 @@
 package com.egiwon.publictransport.data.response
 
+import com.egiwon.publictransport.ui.arrivalinfo.vo.ArrivalViewObject
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
@@ -119,3 +120,14 @@ data class ArrivalInfoItem(
     @field:Element(name = "vehId2")
     var vehId2: String = ""
 )
+
+fun ArrivalInfoItem.mapperToArrivalViewObject(): ArrivalViewObject =
+    ArrivalViewObject(
+        arsId = arsId,
+        routeName = rtNm,
+        stationName = stNm,
+        routeWay = adirection,
+        arrivalTime = arrmsg1,
+        nextBus = arrmsg2,
+        routeTypeColor = 0
+    )
