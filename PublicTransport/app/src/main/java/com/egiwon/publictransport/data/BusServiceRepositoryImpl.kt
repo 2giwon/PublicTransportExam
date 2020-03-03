@@ -18,22 +18,17 @@ class BusServiceRepositoryImpl(
 
     private fun getStationFromRemote(stationName: String): Single<BusStations> =
         remoteDataSource.getRemoteBusStationInfo(stationName)
-            .map { responseItems ->
-                BusStations(
-                    stationName,
-                    responseItems.map {
-                        BusStation(
-                            it.arsId,
-                            it.stNm,
-                            -1,
-                            System.currentTimeMillis()
-                        )
-                    }
-                )
+            .map { items ->
+                BusStations(stationName, items.mapIndexed { index, item ->
+                    BusStation(index, item.arsId, item.stNm, "")
+                })
             }
 
     override fun getBusStationArrivalInfo(arsId: String): Single<List<ArrivalInfoItem>> =
         remoteDataSource.getBusStationArrivalInfo(arsId)
+
+    override fun getFavoriteBusStation(id: Int): Single<BusStation> =
+        localDataSource.getFavoriteBusStation(id)
 
     override fun addFavoriteBusStation(busStation: BusStation) =
         localDataSource.insertBusStation(busStation)
@@ -44,11 +39,17 @@ class BusServiceRepositoryImpl(
     override fun getFavoriteBusStations(): Single<List<BusStation>> =
         localDataSource.getFavoriteBusStation()
 
+    override fun getFavoriteBusStations(from: Int, to: Int): Single<List<BusStation>> =
+        localDataSource.getFavoriteBusStationsFromTo(from, to)
+
     override fun updateFavoriteBusStations(busStations: List<BusStation>): Completable =
         localDataSource.updateFavoriteBusStations(busStations)
 
     override fun saveBusStation(busStation: BusStation): Completable =
-        localDataSource.insertBusStation(busStation)
+        localDataSource.updateBusStation(busStation)
+
+    override fun getFavoriteBusStationLastIndex(): Single<Int> =
+        localDataSource.getLastBusStationIndex()
 
     companion object {
         private var instance: BusServiceRepositoryImpl? = null

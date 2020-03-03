@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "busstations")
 data class BusStation(
-    @PrimaryKey val arsId: String = "",
+    @PrimaryKey val id: Int,
+    val arsId: String = "",
     val stationName: String = "",
-    val tag: Int,
-    val createTime: Long
+    val tag: String
 ) {
 
     companion object {
-        fun empty(): BusStation = BusStation("", "", -1, System.currentTimeMillis())
+        fun empty(): BusStation = BusStation(0, "", "", "")
     }
 
 }

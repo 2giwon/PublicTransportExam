@@ -15,10 +15,23 @@ import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
 import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
 class FavoriteFragment
     : BaseFragment<FavoriteContract.Presenter>(R.layout.fragment_favorite), FavoriteContract.View {
+
+    override val presenter: FavoriteContract.Presenter by lazy {
+        FavoritePresenter(
+            this,
+            BusServiceRepositoryImpl.getInstance(
+                BusServiceRemoteDataSourceImpl.getInstance(),
+                BusServiceLocalDataSourceImpl.getInstance(
+                    BusStationDatabase.getInstance(requireContext()).busStationDao()
+                )
+            )
+        )
+    }
 
     private val onClick: onClickListener = {
 
@@ -38,32 +51,19 @@ class FavoriteFragment
         }
     }
 
-    private val onMovedItemListener: onMovedItemListener = {
-        presenter.updateFavoriteStationList(it)
+    private val onMovedItemListener: onMovedItemListener = { list ->
+        presenter.updateFavoriteStationListFromTo(list)
     }
 
-    private val onCheckedTagListener: onCheckedTagListener =
-        { listPosition: Int, tagPosition: Int ->
-            presenter.requestBusStationTag(listPosition, tagPosition)
-        }
-
-    override val presenter: FavoriteContract.Presenter by lazy {
-        FavoritePresenter(
-            this,
-            BusServiceRepositoryImpl.getInstance(
-                BusServiceRemoteDataSourceImpl.getInstance(),
-                BusServiceLocalDataSourceImpl.getInstance(
-                    BusStationDatabase.getInstance(requireContext()).busStationDao()
-                )
-            )
-        )
+    private val onClickTagListener: onClickTagListener = { id, tag ->
+        presenter.setFavoriteStationTag(id, tag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         with(rv_favorite_station) {
-            adapter = FavoriteAdapter(onClick, onMovedItemListener, onCheckedTagListener)
+            adapter = FavoriteAdapter(onClick, onMovedItemListener, onClickTagListener)
             setHasFixedSize(true)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             presenter.requestFavoriteStationList()
@@ -106,7 +106,8 @@ class FavoriteFragment
                     presenter.deleteFavoriteStationPermanently()
                 }
             }
-        }).show()
+        }).setAnchorView(requireActivity().nav_view)
+            .show()
     }
 
 }
