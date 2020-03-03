@@ -12,6 +12,10 @@ class SwipeToDeleteCallback(
     swipeDirs: Int
 ) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 
+    private var startIndex = 0
+    private var endIndex = 0
+    private var isSwipe = false
+
     override fun isLongPressDragEnabled(): Boolean = true
 
     override fun isItemViewSwipeEnabled(): Boolean = true
@@ -29,7 +33,27 @@ class SwipeToDeleteCallback(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        isSwipe = true
         onDelete(viewHolder.adapterPosition)
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            startIndex = viewHolder?.adapterPosition ?: 0
+            viewHolder?.itemView?.alpha = 0.75f
+        }
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        if (isSwipe) {
+            isSwipe = false
+        } else {
+            endIndex = viewHolder.adapterPosition
+            viewHolder.itemView.alpha = 1f
+            (recyclerView.adapter as? FavoriteAdapter)?.onEndMovedItem(startIndex, endIndex)
+        }
     }
 
     override fun onChildDraw(
