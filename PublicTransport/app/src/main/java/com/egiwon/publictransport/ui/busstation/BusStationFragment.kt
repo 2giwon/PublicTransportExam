@@ -110,7 +110,8 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     private val onClick: (BusStation) -> Unit = { item ->
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
-            putExtra(KEY_ITEM, item.arsId)
+            putExtra(KEY_ITEM_ARSID, item.arsId)
+            putExtra(KEY_ITEM_TITLE, item.stationName)
         }
         startActivityForResult(intent, REQUEST_FAVORITE_ITEM)
     }
@@ -121,7 +122,8 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     }
 
     companion object {
-        const val KEY_ITEM = "keyitem"
+        const val KEY_ITEM_ARSID = "keyitem"
+        const val KEY_ITEM_TITLE = "key_title"
 
         const val REQUEST_FAVORITE_ITEM = 1
     }

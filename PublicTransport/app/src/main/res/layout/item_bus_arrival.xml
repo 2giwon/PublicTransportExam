@@ -10,6 +10,15 @@
     app:cardCornerRadius="0dp"
     app:cardForegroundColor="@android:color/transparent">
 
+    <View
+        android:id="@+id/bar_route"
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:background="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,9 +41,9 @@
             android:backgroundTint="@color/colorPrimary"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_bus_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tv_bus_title"
             tools:text="4분10초후[3번째 전]" />
 
         <com.google.android.material.button.MaterialButton
@@ -42,17 +51,17 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/tv_bus_title"
             app:layout_constraintTop_toBottomOf="@id/tv_bus_title"
             tools:text="가산디지털단지역 방향" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/btn_next_bus"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorGray"

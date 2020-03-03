@@ -46,26 +46,32 @@ class FavoritePresenter(
     }
 
     override fun updateFavoriteStationListFromTo(subList: List<BusStation>) {
-        val mutableList = subList.toMutableList()
-        mutableList.sortBy { it.id }
-
-        val updateList = mutableList.mapIndexed { index, bus ->
-            BusStation(bus.id, subList[index].arsId, subList[index].stationName, subList[index].tag)
-        }
-
-        repository.updateFavoriteBusStations(updateList)
+        repository.updateFavoriteBusStations(getSubListSortById(subList))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
             .addDisposable()
     }
 
+    private fun getSubListSortById(subList: List<BusStation>): List<BusStation> =
+        subList
+            .toMutableList()
+            .asSequence()
+            .sortedBy { busStation -> busStation.id }
+            .mapIndexed { index, bus ->
+                BusStation(
+                    bus.id,
+                    subList[index].arsId,
+                    subList[index].stationName,
+                    subList[index].tag
+                )
+            }
+            .toList()
+
     override fun setFavoriteStationTag(id: Int, tag: String) {
         repository.getFavoriteBusStation(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                saveFavoriteBusStation(
-                    BusStation(id, it.arsId, it.stationName, tag)
-                )
+                saveFavoriteBusStation(BusStation(id, it.arsId, it.stationName, tag))
             }, {})
             .addDisposable()
     }

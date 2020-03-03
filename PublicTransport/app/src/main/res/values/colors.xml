@@ -8,4 +8,13 @@
     <color name="colorGray">#ababab</color>
     <color name="colorYellow">#FFCC00</color>
     <color name="colorBlondyGray">#ECEEF1</color>
+
+    <color name="gansun">#31569C</color>
+    <color name="jisun">#4EB55A</color>
+    <color name="circle">#EDA918</color>
+    <color name="wide">#E72019</color>
+    <color name="village">#31C01D</color>
+    <color name="airport">#CDB010</color>
+    <color name="gyunggi">#009678</color>
+    <color name="incheon">#1B5DAE</color>
 </resources>

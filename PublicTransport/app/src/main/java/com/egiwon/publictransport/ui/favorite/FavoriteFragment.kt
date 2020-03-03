@@ -13,7 +13,8 @@ import com.egiwon.publictransport.data.local.BusStationDatabase
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
-import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM_ARSID
+import com.egiwon.publictransport.ui.busstation.BusStationFragment.Companion.KEY_ITEM_TITLE
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_favorite.*
@@ -36,7 +37,8 @@ class FavoriteFragment
     private val onClick: onClickListener = {
 
         val intent = Intent(requireContext(), BusStationArrivalActivity::class.java).apply {
-            putExtra(KEY_ITEM, it.arsId)
+            putExtra(KEY_ITEM_ARSID, it.arsId)
+            putExtra(KEY_ITEM_TITLE, it.stationName)
         }
         startActivity(intent)
     }

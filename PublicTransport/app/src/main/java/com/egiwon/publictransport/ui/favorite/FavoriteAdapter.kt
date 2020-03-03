@@ -44,7 +44,7 @@ class FavoriteAdapter(
             itemView.iv_expand.setOnClickListener {
                 isExpand = !isExpand
 
-                if (!isExpand) it.rotationX = 180f else it.rotationX = 0f
+                it.rotationX = if (!isExpand) 180f else 0f
                 notifyItemChanged(adapterPosition)
             }
 

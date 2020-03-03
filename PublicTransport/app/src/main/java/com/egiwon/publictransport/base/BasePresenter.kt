@@ -12,8 +12,9 @@ abstract class BasePresenter<T : Any> : BaseContract.Presenter {
         compositeDisposable.clear()
     }
 
-    protected fun MutableList<T>.setItems(items: List<T>) {
+    protected fun MutableList<T>.setItems(items: List<T>, block: (List<T>) -> Unit) {
         clear()
         addAll(items)
+        block(items)
     }
 }

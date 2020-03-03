@@ -17,8 +17,9 @@ class MainPresenter(
 
     override fun getSearchBusStationResult(block: () -> BusStations) {
         block().run {
-            busStationList.setItems(busStations)
-            lastSearchQuery = searchQuery
+            busStationList.setItems(busStations) {
+                lastSearchQuery = searchQuery
+            }
         }
     }
 

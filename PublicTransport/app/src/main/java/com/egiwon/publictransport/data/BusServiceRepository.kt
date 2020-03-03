@@ -3,6 +3,7 @@ package com.egiwon.publictransport.data
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import com.egiwon.publictransport.data.response.BusStationRouteInfoItem
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -26,4 +27,6 @@ interface BusServiceRepository {
     fun saveBusStation(busStation: BusStation): Completable
 
     fun getFavoriteBusStationLastIndex(): Single<Int>
+
+    fun getBusRouteInfo(arsId: String): Single<List<BusStationRouteInfoItem>>
 }

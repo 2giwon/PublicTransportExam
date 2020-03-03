@@ -1,16 +1,16 @@
 package com.egiwon.publictransport.ui.arrivalinfo
 
 import com.egiwon.publictransport.base.BaseContract
-import com.egiwon.publictransport.data.response.ArrivalInfoItem
+import com.egiwon.publictransport.ui.arrivalinfo.vo.ArrivalViewObject
 
 interface BusStationArrivalContract : BaseContract {
 
     interface View : BaseContract.View {
-        fun showBusStationArrivalInfo(arrivalItems: List<ArrivalInfoItem>)
+        fun showBusStationArrivalInfo(arrivalItems: List<ArrivalViewObject>)
 
         fun showLoadFail(throwable: Throwable)
 
-        fun showResultAddFavoriteBusStation(station: ArrivalInfoItem)
+        fun showResultAddFavoriteBusStation(station: ArrivalViewObject)
 
         fun showFavoriteButton()
 
