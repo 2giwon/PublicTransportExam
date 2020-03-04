@@ -9,6 +9,7 @@ import com.egiwon.publictransport.data.response.BusStationRouteInfoItem
 import com.egiwon.publictransport.data.response.mapperToArrivalViewObject
 import com.egiwon.publictransport.ui.arrivalinfo.vo.ArrivalViewObject
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
 
 class BusStationArrivalPresenter(
     private val view: BusStationArrivalContract.View,
@@ -26,7 +27,8 @@ class BusStationArrivalPresenter(
                 arrivalInfoList.setItems(it) { resultList -> getBusRouteInfo(resultList, arsId) }
             }, {
                 view.showLoadFail(it)
-            }).addDisposable()
+            })
+            .addTo(compositeDisposable)
     }
 
     private fun getBusRouteInfo(
@@ -37,11 +39,11 @@ class BusStationArrivalPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ routeInfoList ->
                 val resultList = convertArrivalViewObjects(arrivalInfoList, routeInfoList)
-
                 view.showBusStationArrivalInfo(resultList)
             }, {
                 view.showLoadFail(it)
-            }).addDisposable()
+            })
+            .addTo(compositeDisposable)
 
     private fun convertArrivalViewObjects(
         arrivalInfoList: List<ArrivalInfoItem>,
@@ -86,7 +88,8 @@ class BusStationArrivalPresenter(
                         .find { arsId == it.arsId }
                         ?.let { addFavoriteBusStation(it, index) }
                 }
-            }.addDisposable()
+            }
+            .addTo(compositeDisposable)
     }
 
     private fun addFavoriteBusStation(arrivalInfoItem: ArrivalInfoItem, id: Int) =
@@ -96,7 +99,8 @@ class BusStationArrivalPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 view.showResultAddFavoriteBusStation(arrivalInfoItem.mapperToArrivalViewObject())
-            }.addDisposable()
+            }
+            .addTo(compositeDisposable)
 
     override fun checkFavoriteBusStation(arsId: String) {
         repository.getFavoriteBusStations()
@@ -107,8 +111,7 @@ class BusStationArrivalPresenter(
                         view.hideFavoriteButton()
                     }
                 }
-            }, {
-                view.showLoadFail(it)
-            }).addDisposable()
+            }, { view.showLoadFail(it) })
+            .addTo(compositeDisposable)
     }
 }

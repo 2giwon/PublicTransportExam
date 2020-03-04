@@ -83,6 +83,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showSearchBusStationResult(busStations: BusStations) {
         hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(busStations.busStations)
+        sendSearchBusStationResult(busStations)
     }
 
     override fun showSearchBusCache(busStations: BusStations) {
