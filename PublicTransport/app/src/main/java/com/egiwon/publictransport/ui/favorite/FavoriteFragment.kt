@@ -48,7 +48,7 @@ class FavoriteFragment
             val busStation = adapter.onGetItem(it)
             adapter.onRemoveItem(it)
 
-            presenter.deleteFavoriteStationTemporarily(busStation, it)
+            presenter.deleteFavoriteStation(busStation, it)
             adapter.notifyDataSetChanged()
         }
     }
@@ -93,22 +93,13 @@ class FavoriteFragment
     }
 
     override fun refreshFavoriteAdapterList() {
-        var undoClicked = false
         Snackbar.make(
             rv_favorite_station,
             getString(R.string.notify_delete_favorite_bus_station),
             Snackbar.LENGTH_LONG
         ).setAction(getString(R.string.cancel)) {
             presenter.restoreDeletedFavoriteStation()
-            undoClicked = true
-        }.addCallback(object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                super.onDismissed(transientBottomBar, event)
-                if (!undoClicked) {
-                    presenter.deleteFavoriteStationPermanently()
-                }
-            }
-        }).setAnchorView(requireActivity().nav_view)
+        }.setAnchorView(requireActivity().nav_view)
             .show()
     }
 
