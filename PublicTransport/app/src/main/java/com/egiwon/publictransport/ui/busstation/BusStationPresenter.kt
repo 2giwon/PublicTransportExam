@@ -13,27 +13,24 @@ class BusStationPresenter(
 ) : BasePresenter<Item>(), BusStationContract.Presenter {
 
     override fun requestBusStations(stationName: String) {
-        if (stationName.isBlank()) {
-            view.showErrorSearchNameEmpty()
-        } else {
-            repository.getStationInfo(stationName = stationName)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view.showLoading() }
-                .doAfterTerminate { view.hideLoading() }
-                .subscribeBy(
-                    onSuccess = { busStations ->
-                        runCatching { busStations.busStations.isNotEmpty() }
-                            .onFailure { view.showErrorResultEmpty() }
-                            .onSuccess { view.showSearchBusStationResult(busStations) }
-                    },
-                    onError = {
-                        view.showErrorLoadBusStationFail()
-                    }
-                )
-                .addTo(compositeDisposable)
-        }
-
+        repository.getStationInfo(stationName = stationName)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view.showLoading() }
+            .doAfterTerminate { view.hideLoading() }
+            .subscribeBy(
+                onSuccess = { busStations ->
+                    runCatching { busStations.busStations.isNotEmpty() }
+                        .onFailure { view.showErrorResultEmpty() }
+                        .onSuccess { view.showSearchBusStationResult(busStations) }
+                },
+                onError = {
+                    view.showErrorLoadBusStationFail()
+                }
+            )
+            .addTo(compositeDisposable)
     }
+
+
 
 
 }
