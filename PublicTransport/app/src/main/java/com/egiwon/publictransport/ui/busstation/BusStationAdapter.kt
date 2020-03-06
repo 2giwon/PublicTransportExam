@@ -1,9 +1,9 @@
 package com.egiwon.publictransport.ui.busstation
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.egiwon.publictransport.R
 import com.egiwon.publictransport.data.local.model.BusStation
@@ -15,12 +15,27 @@ class BusStationAdapter(private val onClick: (BusStation) -> Unit) :
 
     private val stationList = ArrayList<BusStation>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder =
-        StationViewHolder(parent = parent).apply {
+    private lateinit var layoutInflater: LayoutInflater
+
+    private fun provideLayoutInflater(context: Context): LayoutInflater {
+        if (!::layoutInflater.isInitialized) layoutInflater = LayoutInflater.from(context)
+        return layoutInflater
+    }
+
+    private fun onCreateViewHolder(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): StationViewHolder =
+        StationViewHolder(
+            inflater.inflate(R.layout.rv_station_item, parent, false) as ViewGroup
+        ).apply {
             itemView.setOnClickListener {
                 onClick(stationList[adapterPosition])
             }
         }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder =
+        onCreateViewHolder(provideLayoutInflater(parent.context), parent)
 
     override fun getItemCount(): Int = stationList.size
 
@@ -34,12 +49,8 @@ class BusStationAdapter(private val onClick: (BusStation) -> Unit) :
     }
 
     inner class StationViewHolder(
-        @LayoutRes
-        layoutRes: Int = R.layout.rv_station_item,
         parent: ViewGroup
-    ) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-    ) {
+    ) : RecyclerView.ViewHolder(parent) {
         fun bind(item: BusStation) = itemView.bindItem(item)
 
         private fun View.bindItem(item: BusStation) {
