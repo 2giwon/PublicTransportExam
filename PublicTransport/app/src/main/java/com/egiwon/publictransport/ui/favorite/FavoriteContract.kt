@@ -18,9 +18,7 @@ interface FavoriteContract : BaseContract {
 
         fun restoreDeletedFavoriteStation()
 
-        fun deleteFavoriteStationTemporarily(busStation: BusStation, position: Int)
-
-        fun deleteFavoriteStationPermanently()
+        fun deleteFavoriteStation(busStation: BusStation, position: Int)
 
         fun updateFavoriteStationListFromTo(subList: List<BusStation>)
 

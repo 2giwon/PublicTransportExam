@@ -37,21 +37,21 @@ class FavoriteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteStationViewHolder =
         FavoriteStationViewHolder(parent = parent).apply {
-            itemView.setOnClickListener {
-                onClick(favoriteStationList[adapterPosition])
-            }
+            with(itemView) {
+                setOnClickListener { onClick(favoriteStationList[adapterPosition]) }
 
-            itemView.iv_expand.setOnClickListener {
-                isExpand = !isExpand
+                iv_expand.setOnClickListener {
+                    isExpand = !isExpand
 
-                it.rotationX = if (!isExpand) 180f else 0f
-                notifyItemChanged(adapterPosition)
-            }
+                    it.rotationX = if (!isExpand) 180f else 0f
+                    notifyItemChanged(adapterPosition)
+                }
 
-            itemView.iv_confirm.setOnClickListener {
-                itemView.tv_tag.text = itemView.et_tag.text.toString()
-                isExpand = false
-                onClickTag(favoriteStationList[adapterPosition].id, itemView.tv_tag.text.toString())
+                iv_confirm.setOnClickListener {
+                    tv_tag.text = et_tag.text.toString()
+                    isExpand = false
+                    onClickTag(favoriteStationList[adapterPosition].id, tv_tag.text.toString())
+                }
             }
         }
 

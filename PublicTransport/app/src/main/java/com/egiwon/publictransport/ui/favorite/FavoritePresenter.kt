@@ -5,6 +5,8 @@ import com.egiwon.publictransport.data.BusServiceRepository
 import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.Item
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 
 class FavoritePresenter(
     private val view: FavoriteContract.View,
@@ -15,46 +17,44 @@ class FavoritePresenter(
 
     private var deletedBusPosition: Int = 0
 
-    private var lastId = 0
-
     override fun requestFavoriteStationList() {
         repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                view.showFavoriteStationList(list)
-                lastId = list.size
-            }
-            .addDisposable()
+            .subscribeBy { list -> view.showFavoriteStationList(list) }
+            .addTo(compositeDisposable)
     }
 
     override fun restoreDeletedFavoriteStation() {
-        requestFavoriteStationList()
+        repository.getFavoriteBusStations()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { list ->
+                val restoredBusList = list.toMutableList().apply {
+                    add(deletedBusPosition, deletedBusStation)
+                }
+                view.showFavoriteStationList(restoredBusList)
+            }
+            .addTo(compositeDisposable)
     }
 
-    override fun deleteFavoriteStationTemporarily(busStation: BusStation, position: Int) {
+    override fun deleteFavoriteStation(busStation: BusStation, position: Int) {
         deletedBusStation = busStation
         deletedBusPosition = position
 
-        view.refreshFavoriteAdapterList()
-    }
-
-    override fun deleteFavoriteStationPermanently() {
         repository.deleteFavoriteBusStation(deletedBusStation)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
-            .addDisposable()
+            .subscribeBy { view.refreshFavoriteAdapterList() }
+            .addTo(compositeDisposable)
     }
 
     override fun updateFavoriteStationListFromTo(subList: List<BusStation>) {
         repository.updateFavoriteBusStations(getSubListSortById(subList))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
-            .addDisposable()
+            .addTo(compositeDisposable)
     }
 
     private fun getSubListSortById(subList: List<BusStation>): List<BusStation> =
         subList
-            .toMutableList()
             .asSequence()
             .sortedBy { busStation -> busStation.id }
             .mapIndexed { index, bus ->
@@ -70,16 +70,14 @@ class FavoritePresenter(
     override fun setFavoriteStationTag(id: Int, tag: String) {
         repository.getFavoriteBusStation(id)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                saveFavoriteBusStation(BusStation(id, it.arsId, it.stationName, tag))
-            }, {})
-            .addDisposable()
+            .subscribeBy { saveFavoriteBusStation(BusStation(id, it.arsId, it.stationName, tag)) }
+            .addTo(compositeDisposable)
     }
 
     private fun saveFavoriteBusStation(busStation: BusStation) =
         repository.saveBusStation(busStation)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { requestFavoriteStationList() }
-            .addDisposable()
+            .addTo(compositeDisposable)
 
 }

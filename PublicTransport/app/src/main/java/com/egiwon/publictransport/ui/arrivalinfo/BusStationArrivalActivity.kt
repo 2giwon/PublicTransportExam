@@ -48,7 +48,7 @@ class BusStationArrivalActivity(
                 mainPresenter.getBusStationArrivalInfo(arsId)
             }
 
-            mainPresenter.checkFavoriteBusStation(arsId)
+            mainPresenter.checkIfAddedFavoriteBusStation(arsId)
         }
 
         rv_arrival_bus.adapter = BusStationArrivalAdapter()

@@ -16,7 +16,15 @@ import com.egiwon.publictransport.data.local.model.BusStations
 import com.egiwon.publictransport.data.remote.BusServiceRemoteDataSourceImpl
 import com.egiwon.publictransport.ext.hideKeyboard
 import com.egiwon.publictransport.ui.arrivalinfo.BusStationArrivalActivity
+import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.widget.textChanges
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import kotlinx.android.synthetic.main.fragment_busstation.*
+import java.util.concurrent.TimeUnit
 
 class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.fragment_busstation),
     BusStationContract.View {
@@ -33,6 +41,8 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         )
     }
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,7 +57,25 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
         }
 
         initSearch()
+        bindRx()
         getBusStationCache()
+    }
+
+    private fun bindRx() {
+        val textChanges = et_search.textChanges()
+        val buttonClick = iv_search.clicks()
+            .throttleFirst(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+            .flatMapSingle { Single.fromCallable(et_search::getText) }
+
+        Observable.merge(textChanges, buttonClick)
+            .debounce(700, TimeUnit.MILLISECONDS)
+            .filter(CharSequence::isNotBlank)
+            .map(CharSequence::trim)
+            .map(CharSequence::toString)
+            .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { presenter.requestBusStations(it) }
+            .addTo(compositeDisposable)
     }
 
     private fun initSearch() {
@@ -83,6 +111,7 @@ class BusStationFragment : BaseFragment<BusStationContract.Presenter>(R.layout.f
     override fun showSearchBusStationResult(busStations: BusStations) {
         hideEmptyBus()
         (rv_station.adapter as? BusStationAdapter)?.setItems(busStations.busStations)
+        sendSearchBusStationResult(busStations)
     }
 
     override fun showSearchBusCache(busStations: BusStations) {
