@@ -24,7 +24,9 @@ class BusStationArrivalPresenter(
             .doOnSubscribe { view.showLoading() }
             .doAfterTerminate { view.hideLoading() }
             .subscribe({
-                arrivalInfoList.setItems(it) { resultList -> getBusRouteInfo(resultList, arsId) }
+                arrivalInfoList.setItems(it) { resultList ->
+                    getBusRouteInfo(resultList, arsId)
+                }
             }, {
                 view.showLoadFail(it)
             })
@@ -80,37 +82,53 @@ class BusStationArrivalPresenter(
         }
 
     override fun addFavoriteBusStation(arsId: String) {
-        repository.getFavoriteBusStationLastIndex()
+        repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { index ->
-                if (arrivalInfoList.isNotEmpty()) {
-                    arrivalInfoList
-                        .find { arsId == it.arsId }
-                        ?.let { addFavoriteBusStation(it, index) }
-                }
+            .subscribe { list ->
+                list.takeIf { arrivalInfoList.isNotEmpty() }
+                    ?.none { arsId == it.arsId }
+                    ?.let { isExist ->
+                        if (isExist) {
+                            addFavoriteBusStationFindArrivalBusStations(arsId, list)
+                        }
+                    }
             }
             .addTo(compositeDisposable)
     }
 
+    private fun addFavoriteBusStationFindArrivalBusStations(
+        arsId: String,
+        list: List<BusStation>
+    ) {
+        arrivalInfoList
+            .takeIf(MutableList<ArrivalInfoItem>::isNotEmpty)
+            ?.find { arsId == it.arsId }
+            ?.let { addFavoriteBusStation(it, list.getLastBusStationId()) }
+
+    }
+
+    private fun List<BusStation>.getLastBusStationId(): Int =
+        takeIf { isNotEmpty() }
+            ?.let { list -> list[list.size - 1].id + 1 }
+            ?: 0
+
     private fun addFavoriteBusStation(arrivalInfoItem: ArrivalInfoItem, id: Int) =
         repository.addFavoriteBusStation(
             BusStation(id, arrivalInfoItem.arsId, arrivalInfoItem.stNm, "")
-        )
-            .observeOn(AndroidSchedulers.mainThread())
+        ).observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 view.showResultAddFavoriteBusStation(arrivalInfoItem.mapperToArrivalViewObject())
             }
             .addTo(compositeDisposable)
 
-    override fun checkFavoriteBusStation(arsId: String) {
+    override fun checkIfAddedFavoriteBusStation(arsId: String) {
         repository.getFavoriteBusStations()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.forEach { busStation ->
-                    if (busStation.arsId == arsId) {
-                        view.hideFavoriteButton()
-                    }
-                }
+            .subscribe({ resultList ->
+                resultList
+                    .filter { it.arsId == arsId }
+                    .takeIf(List<BusStation>::isNotEmpty)
+                    ?.let { view.hideFavoriteButton() }
             }, { view.showLoadFail(it) })
             .addTo(compositeDisposable)
     }

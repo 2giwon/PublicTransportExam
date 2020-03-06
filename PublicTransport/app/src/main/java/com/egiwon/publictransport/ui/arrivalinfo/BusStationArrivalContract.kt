@@ -22,6 +22,6 @@ interface BusStationArrivalContract : BaseContract {
 
         fun addFavoriteBusStation(arsId: String)
 
-        fun checkFavoriteBusStation(arsId: String)
+        fun checkIfAddedFavoriteBusStation(arsId: String)
     }
 }
