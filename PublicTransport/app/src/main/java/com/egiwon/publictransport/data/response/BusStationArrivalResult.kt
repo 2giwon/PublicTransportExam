@@ -131,3 +131,19 @@ fun ArrivalInfoItem.mapperToArrivalViewObject(): ArrivalViewObject =
         nextBus = arrmsg2,
         routeTypeColor = 0
     )
+
+fun ArrivalInfoItem.mapperToArrivalViewObjectFromParameters(
+    arsId: String = this.arsId, routeName: String = this.rtNm,
+    stationName: String = this.stNm, routeWay: String = this.adirection,
+    arrivalTime: String = this.arrmsg1, nextBus: String = this.arrmsg2,
+    routeTypeColor: Int = 0
+): ArrivalViewObject =
+    ArrivalViewObject(
+        arsId = arsId,
+        routeName = routeName,
+        stationName = stationName,
+        routeWay = routeWay,
+        arrivalTime = arrivalTime,
+        nextBus = nextBus,
+        routeTypeColor = routeTypeColor
+    )
