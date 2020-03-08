@@ -25,15 +25,20 @@ class FavoritePresenter(
     }
 
     override fun restoreDeletedFavoriteStation() {
-        repository.getFavoriteBusStations()
+        repository.addFavoriteBusStation(deletedBusStation)
+            .andThen(repository.getFavoriteBusStations())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy { list ->
-                val restoredBusList = list.toMutableList().apply {
-                    add(deletedBusPosition, deletedBusStation)
-                }
-                view.showFavoriteStationList(restoredBusList)
+            .subscribeBy {
+                view.showFavoriteStationList(it)
             }
             .addTo(compositeDisposable)
+    }
+
+    private fun showResultRestoreFavoriteBusStation(list: List<BusStation>) {
+        val restoredBusList = list.toMutableList().apply {
+            add(deletedBusPosition, deletedBusStation)
+        }
+
     }
 
     override fun deleteFavoriteStation(busStation: BusStation, position: Int) {
