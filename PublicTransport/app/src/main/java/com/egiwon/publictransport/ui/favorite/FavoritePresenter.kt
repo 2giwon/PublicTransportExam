@@ -34,13 +34,6 @@ class FavoritePresenter(
             .addTo(compositeDisposable)
     }
 
-    private fun showResultRestoreFavoriteBusStation(list: List<BusStation>) {
-        val restoredBusList = list.toMutableList().apply {
-            add(deletedBusPosition, deletedBusStation)
-        }
-
-    }
-
     override fun deleteFavoriteStation(busStation: BusStation, position: Int) {
         deletedBusStation = busStation
         deletedBusPosition = position
