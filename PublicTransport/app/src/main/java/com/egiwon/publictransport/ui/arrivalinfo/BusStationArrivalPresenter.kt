@@ -7,6 +7,7 @@ import com.egiwon.publictransport.data.local.model.BusStation
 import com.egiwon.publictransport.data.response.ArrivalInfoItem
 import com.egiwon.publictransport.data.response.BusStationRouteInfoItem
 import com.egiwon.publictransport.data.response.mapperToArrivalViewObject
+import com.egiwon.publictransport.data.response.mapperToArrivalViewObjectFromParameters
 import com.egiwon.publictransport.ui.arrivalinfo.vo.ArrivalViewObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
@@ -22,7 +23,6 @@ class BusStationArrivalPresenter(
         repository.getBusStationArrivalInfo(arsId)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { view.showLoading() }
-            .doAfterTerminate { view.hideLoading() }
             .subscribe({
                 arrivalInfoList.setItems(it) { resultList ->
                     getBusRouteInfo(resultList, arsId)
@@ -39,6 +39,7 @@ class BusStationArrivalPresenter(
     ) =
         repository.getBusRouteInfo(arsId)
             .observeOn(AndroidSchedulers.mainThread())
+            .doAfterTerminate { view.hideLoading() }
             .subscribe({ routeInfoList ->
                 val resultList = convertArrivalViewObjects(arrivalInfoList, routeInfoList)
                 view.showBusStationArrivalInfo(resultList)
@@ -56,15 +57,7 @@ class BusStationArrivalPresenter(
                 routeInfoList.find { arrivalItem.busRouteId == it.busRouteId }?.busRouteType
 
             val routeColor = getRouteTypeColor(busRouteType ?: 0)
-            ArrivalViewObject(
-                arsId = arrivalItem.arsId,
-                routeName = arrivalItem.rtNm,
-                stationName = arrivalItem.stNm,
-                routeWay = arrivalItem.adirection,
-                arrivalTime = arrivalItem.arrmsg1,
-                nextBus = arrivalItem.arrmsg2,
-                routeTypeColor = routeColor
-            )
+            arrivalItem.mapperToArrivalViewObjectFromParameters(routeTypeColor = routeColor)
         }
 
 
@@ -107,10 +100,10 @@ class BusStationArrivalPresenter(
 
     }
 
-    private fun List<BusStation>.getLastBusStationId(): Int =
-        takeIf { isNotEmpty() }
-            ?.let { list -> list[list.size - 1].id + 1 }
-            ?: 0
+    private fun List<BusStation>.getLastBusStationId(): Int = when (isNotEmpty()) {
+        true -> this[this.size - 1].id + 1
+        false -> 0
+    }
 
     private fun addFavoriteBusStation(arrivalInfoItem: ArrivalInfoItem, id: Int) =
         repository.addFavoriteBusStation(
