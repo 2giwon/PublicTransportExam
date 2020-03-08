@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.egiwon.publictransport.data.local.model.BusStation
 
 @Database(
     entities = [BusStation::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
@@ -26,11 +28,19 @@ abstract class BusStationDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         BusStationDatabase::class.java, "BusStation.db"
-                    ).build()
+                    ).addMigrations(migration_1_2)
+                        .build()
                 }
 
                 return instance!!
             }
+        }
+
+        private val migration_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE busstations ADD COLUMN tag TEXT DEFAULT '' NOT NULL")
+            }
+
         }
 
     }
