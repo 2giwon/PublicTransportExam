@@ -28,9 +28,7 @@ class FavoritePresenter(
         repository.addFavoriteBusStation(deletedBusStation)
             .andThen(repository.getFavoriteBusStations())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy {
-                view.showFavoriteStationList(it)
-            }
+            .subscribeBy { list -> view.showFavoriteStationList(list) }
             .addTo(compositeDisposable)
     }
 
